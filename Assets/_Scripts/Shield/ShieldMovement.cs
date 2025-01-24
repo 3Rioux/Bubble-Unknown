@@ -4,14 +4,16 @@ using UnityEngine.Serialization;
 namespace _Scripts.Shield
 {
     /// <summary>
-    /// Script to make the shield move around the player 
+    /// Script to make the shield move around the player
+    /// https://discussions.unity.com/t/solved-rotate-around-an-object-based-on-mouse-position/649185/2 
     /// </summary>
     public class ShieldMovement : MonoBehaviour
     {
-        public GameObject orb;
-        public float radius;
-        public float radiusSpeed;
-        public float rotationSpeed;
+       
+       [SerializeField] private GameObject orb;
+       [SerializeField] private float radius;
+       [SerializeField] private float radiusSpeed;
+       [SerializeField] private float rotationSpeed;
 
         private Transform centre;
         private Vector3 desiredPos;
@@ -31,33 +33,7 @@ namespace _Scripts.Shield
             transform.position = Vector3.MoveTowards(transform.position, desiredPos, radiusSpeed * Time.deltaTime);
         }
         
-        
-        /*[SerializeField] private GameObject shield;// holds the shield GameObject or Prefab 
-
-        [SerializeField] private float radius;
-         private  Transform pivot;
-
-        private void Start()
-        {
-            // pivot = shield.transform;
-            // transform.parent = pivot;
-            // transform.position += Vector3.up * radius;
-            
-        }
-
-        void Update()
-        {
-            
-            
-            //Vector3 orbVector = Camera.main.WorldToScreenPoint(shield.position);
-            // orbVector = Input.mousePosition - orbVector;
-            // float angle = Mathf.Atan2(orbVector.y, orbVector.x) * Mathf.Rad2Deg;
-            //
-            // pivot.position = shield.position;
-            // pivot.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
-            
-        }
-        */
+       
    
         
     }//end ShieldMovement

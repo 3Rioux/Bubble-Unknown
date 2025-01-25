@@ -39,14 +39,18 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PAUSED) return; // DONT Allow player input if Game is Pause 
+        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PAUSED) return; // DONT Allow player input if Game is Pause  
+
+        //Also need to lock the mouse so that when i click the player does NOT Shoot 
+
+        DisplayBubbles();
 
         //Test Re-Displaying Bubbles
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            //Spawn / Display the bubbles in the list to the user
-            DisplayBubbles();
-        }
+        //if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        //{
+        //    //Spawn / Display the bubbles in the list to the user
+        //    DisplayBubbles();
+        //}
 
         //Test Taking Damage
         if (Keyboard.current.qKey.wasPressedThisFrame) PlayerTakeDamage();

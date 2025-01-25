@@ -51,14 +51,12 @@ public class Enemy : MonoBehaviour
         Health = MaxHealth;
 
         //Test Time
-        StartCoroutine(InstantiateBubbleCoroutine());
+        //StartCoroutine(InstantiateBubbleCoroutine());
     }
 
     // Update is called once per frame
     void Update()
     {
-       
-
         if (!_isAlive) return; // Skip updates if dead
 
         // State handling
@@ -76,6 +74,8 @@ public class Enemy : MonoBehaviour
 
     }
 
+    //display found target once:
+    private bool foundTarget = false;
     private void HandleNormalBehavior()
     {
         //if no target set just exit the method 
@@ -84,6 +84,12 @@ public class Enemy : MonoBehaviour
         // Check if player is within range
         if (Vector2.Distance(transform.position, _playerTarget.position) <= _targetRange)
         {
+            if (!foundTarget)
+            {
+                foundTarget = true;
+                Debug.Log("Found Target!");
+            }
+
             //update timer
             _shootTimer += Time.deltaTime;
 
@@ -119,6 +125,8 @@ public class Enemy : MonoBehaviour
         {
             _isTrapped = true;//Trapped in the bubble 
 
+            _currentState = ENEMYSTATES.TRAPPED;
+
             //Tell the Bubble to "Grow" with this enemy as the center 
 
             //Take Damage 
@@ -132,7 +140,7 @@ public class Enemy : MonoBehaviour
 
 
     //Take Damage 
-    private void UnitTakeDamage(int damage)
+    public void UnitTakeDamage(int damage)
     {
         //remove HP 
         Health -= damage;
@@ -140,14 +148,26 @@ public class Enemy : MonoBehaviour
         if(Health  < 0)
         {
             //enemy is dead 
-            _isAlive = false; 
+            _isAlive = false;
+            _currentState = ENEMYSTATES.DEAD;
 
             //Dead enemy logic here 
-            Destroy(gameObject, 5f);//destroy after 5 seconds (For now)
+            // Trigger death logic
+            HandleDeath();
+            //Destroy(gameObject, 5f);//destroy after 5 seconds (For now)
 
         }
 
     }//edn UnitTakeDamage
+
+
+    private void HandleDeath()
+    {
+        // Add death animations or sounds here
+
+        // Destroy the enemy after a delay
+        Destroy(gameObject, _destroyAfterDeathDelay);
+    }
 
 
     /// <summary>
@@ -175,11 +195,26 @@ public class Enemy : MonoBehaviour
     // Enemy ATTACK logic
     private void UnitShoot()
     {
-        //Shoot @ Player
+        if (_bubbleShootPrefab == null || _playerTarget == null) return;
 
-        //Delay between shoots 
-       
-       
+        // Calculate direction to the player
+        Vector2 direction = (_playerTarget.position - transform.position).normalized;
+
+        // Instantiate and shoot the bubble
+        GameObject bubble = Instantiate(_bubbleShootPrefab, transform.position, Quaternion.identity);
+        Rigidbody2D rb = bubble.GetComponent<Rigidbody2D>();
+
+        if (rb == null)
+        {
+            rb = bubble.AddComponent<Rigidbody2D>();
+        }
+
+        rb.linearVelocity = direction * _velocity;
+
+        // Optionally destroy the bubble after some time to clean up the scene
+        Destroy(bubble, 10f);
+
+        Debug.Log("Enemy shot a bubble!");
 
     }
 
@@ -212,8 +247,8 @@ public class Enemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        float ran = Random.value;
-        Gizmos.color = new Color(Random.value * ran, Random.value * ran, Random.value * ran);
+        //float ran = Random.value;
+        //Gizmos.color = new Color(Random.value * ran, Random.value * ran, Random.value * ran);
         Gizmos.DrawWireSphere(this.transform.position, _targetRange);
     }
 

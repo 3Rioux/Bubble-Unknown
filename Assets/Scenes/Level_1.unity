@@ -62828,6 +62828,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1668498901700038673, guid: bbcb30e3f47b1304db364199c4e60b3e, type: 3}
+      propertyPath: m_Pitch
+      value: 1.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1668498901700038673, guid: bbcb30e3f47b1304db364199c4e60b3e, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 39e7f0e93964f4f24a0d7e89a90454e7, type: 3}
+    - target: {fileID: 1668498901700038673, guid: bbcb30e3f47b1304db364199c4e60b3e, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 39e7f0e93964f4f24a0d7e89a90454e7, type: 3}
     - target: {fileID: 2128315730029273799, guid: bbcb30e3f47b1304db364199c4e60b3e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

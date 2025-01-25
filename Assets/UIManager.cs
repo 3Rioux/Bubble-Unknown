@@ -187,20 +187,20 @@ public class UIManager : MonoBehaviour
     // === AUDIO SETTINGS ===
     public void OnClick_SetMasterVolume(float volume)
     {
-        _audioMixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("MasterVolume", volume);
+        SoundManager.Instance.SetMasterVolume(volume);
+        _masterVolumeSlider.value = volume;  // Update slider UI
     }
 
     public void OnClick_SetMusicVolume(float volume)
     {
-        _audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("MusicVolume", volume);
+        SoundManager.Instance.SetMusicVolume(volume);
+        _musicVolumeSlider.value = volume;  // Update slider UI
     }
 
     public void OnClick_SetSFXVolume(float volume)
     {
-        _audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("SFXVolume", volume);
+        SoundManager.Instance.SetSFXVolume(volume);
+        _sfxVolumeSlider.value = volume;  // Update slider UI
     }
 
     private void LoadSettings()
@@ -209,6 +209,7 @@ public class UIManager : MonoBehaviour
         _musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
         _sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
     }
+
 
     // === HELPER FUNCTION ===
     private void SetPanelVisibility(GameObject panel, bool visible)

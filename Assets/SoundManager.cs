@@ -75,6 +75,7 @@ public class SoundManager : MonoBehaviour
         SetSFXVolume(PlayerPrefs.GetFloat("SFXVolume", 0.75f));
     }
 
+
     // === AUDIO FADE HELPERS ===
     private IEnumerator FadeInMusic(AudioClip newClip, float duration)
     {

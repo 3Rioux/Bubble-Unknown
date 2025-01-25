@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     /***********************MOVE TO UI MANAGER ***********************/
 
-
+    [SerializeField] private TextMeshProUGUI _displayCurrentState;
 
 
     [SerializeField] private int score = 0; // Example score tracker
@@ -51,18 +51,23 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        _displayCurrentState.text = GameStateMachine.CurrentState.ToString();
+
+        //Prevent Pausing in the GameOver State 
+        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER) return;
+
         // Handle game state transitions (example hotkeys)
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameStateMachine.CurrentState == GameState.PLAYING)
-            {
-                PauseGame();
-            }
-            else if (GameStateMachine.CurrentState == GameState.PAUSED)
-            {
-                ResumeGame();
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    if (GameStateMachine.CurrentState == GameState.PLAYING)
+        //    {
+        //        PauseGame();
+        //    }
+        //    else if (GameStateMachine.CurrentState == GameState.PAUSED)
+        //    {
+        //        ResumeGame();
+        //    }
+        //}
 
         //Test Back To Main Menu 
         if (Input.GetKeyDown(KeyCode.M))
@@ -102,8 +107,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.GAMEOVER:
-                UIManager.Instance.SetPanelVisibility(UIManager.Instance._gameOverPanel, true);
-                Time.timeScale = 0f; // Stop the game
+                UIManager.Instance.ToggleGameOver();
                 break;
         }
     }

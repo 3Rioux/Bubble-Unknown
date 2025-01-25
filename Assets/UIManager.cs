@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _pauseMenuPanel;
     [SerializeField] private GameObject _creditsPanel;
     //Added GameOver
-    [SerializeField] public GameObject _gameOverPanel;
+    [SerializeField] private GameObject _gameOverPanel;
 
     [Header("Audio Components")]
     [SerializeField] private AudioMixer _audioMixer;
@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
             return;
         }
 
@@ -69,6 +69,9 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        //Prevent Pausing in the GameOver State 
+        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER) return;
+
         // Prevent pausing in the main menu
         if (!_isMainMenu && _inputActions.UI.Pause.triggered)
         {
@@ -113,11 +116,46 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // === GAME OVER HANDLING ===
+    public void ToggleGameOver()
+    {
+        bool toggle = GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER;
+        SetPanelVisibility(_gameOverPanel, toggle);
+
+        if (toggle)
+        {
+            //reset the pause: 
+            _isPaused = true;
+            _inputActions.Player.Disable();
+            _inPauseSnapshot.TransitionTo(0.5f); // ****************Change to Game Over
+        }
+        else
+        {
+            _inputActions.Player.Enable();
+            _normalSnapshot.TransitionTo(0.5f);
+        }
+
+        Time.timeScale = 0f; // Stop the game
+        Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = toggle;
+    }
+
     // === PAUSE SYSTEM ===
     private void TogglePauseMenu()
     {
         _isPaused = !_isPaused;
         SetPanelVisibility(_pauseMenuPanel, _isPaused);
+
+        //---
+        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PLAYING)
+        {
+            GameManager.Instance.PauseGame();
+        }
+        else if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PAUSED)
+        {
+            GameManager.Instance.ResumeGame();
+        }
+        //---
 
         if (_isPaused)
         {
@@ -188,6 +226,10 @@ public class UIManager : MonoBehaviour
 
     public void OnClick_StartGame()
     {
+        // change state to Playing:
+        GameManager.Instance.StartGame();
+
+        //Load Level
         SceneManager.LoadScene("Level_1");
     }
 

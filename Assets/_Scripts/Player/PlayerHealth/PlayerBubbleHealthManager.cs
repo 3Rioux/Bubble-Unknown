@@ -111,12 +111,13 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     //Take Damage
     public void PlayerTakeDamage()
     {
-        if (_bubblesList.Count > 0)
-        {
-            //Remove a life
-            RemoveBubble();
+        //Remove a life
+        RemoveBubble();
+        _bubblesList.RemoveAt(_bubblesList.Count - 1);
 
-            //Audio FX
+        if (bubbleHealth > 0)
+        {
+           //Audio FX
 
             //Screen Turn Red 
 
@@ -165,7 +166,9 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         lastBubble.transform.parent = null;
 
         // Remove the bubble from the list
-        RemoveBubble();
+        // Remove the bubble from the list
+        _bubblesList.RemoveAt(_bubblesList.Count - 1);
+        bubbleHealth--;//reduce bubbles left count
 
         // Ensure the bubble has a Rigidbody2D for physics
         Rigidbody2D bubbleRigidbody = lastBubble.GetComponent<Rigidbody2D>();

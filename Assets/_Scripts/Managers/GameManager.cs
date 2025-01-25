@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +9,7 @@ public class GameManager : MonoBehaviour
     /***********************MOVE TO UI MANAGER ***********************/
     [Header("UI Elements")]
     [SerializeField] private GameObject endGameUI; // Assign in the Unity Inspector
-    [SerializeField] private UnityEngine.UI.Text scoreText; // Assign a Text element for the score
+    //[SerializeField] private TextMeshProUGUI scoreText; // Assign a Text element for the score
     /***********************MOVE TO UI MANAGER ***********************/
 
 
@@ -41,10 +42,10 @@ public class GameManager : MonoBehaviour
         }
 
         // Display the final score
-        if (scoreText != null)
-        {
-            scoreText.text = $"Score: {score}";
-        }
+        //if (scoreText != null)
+        //{
+        //    scoreText.text = $"Score: {score}";
+        //}
 
         // Add additional functionality here, e.g., saving scores or logging analytics
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public enum ENEMYSTATES { DOINGHISTHING, TRAPPED, DEAD, ERROR};
+public enum ENEMYSTATES { DOINGHISTHING, ATTACKING, TRAPPED, DEAD, ERROR};
 
 public class Enemy : MonoBehaviour
 {
@@ -11,7 +11,8 @@ public class Enemy : MonoBehaviour
 
     [Header("Target")]
     [SerializeField] private Transform _playerTarget;
-    [SerializeField] private float _targetRange = 20f;
+    [SerializeField] private float _targetRange = 10f;
+    [SerializeField] private float _safeDistance = 5f; // Distance to maintain from the player
 
     [Header("Shoot")]
     [SerializeField] private GameObject _bubbleShootPrefab; // Store my Bubble Prefab To Shoot Prefab
@@ -19,6 +20,15 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _velocity = 10;
     private float _shootTimer = 0f; // Timer for shooting
 
+    [Header("Movement")]
+    [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private float _wanderRadius = 10f; // Max distance for wandering
+    [SerializeField] private float _wanderCooldown = 2f; // Time between wander direction changes
+    private Vector2 _wanderDirection;
+    private float _wanderTimer;
+
+    //RigidBody Component
+    private Rigidbody2D _rb; // Rigidbody2D for movement
 
     [Header("Trapped In Bubble")]
     [SerializeField] private bool _isTrapped = false;
@@ -52,6 +62,13 @@ public class Enemy : MonoBehaviour
 
         //Test Time
         //StartCoroutine(InstantiateBubbleCoroutine());
+
+        // Get the Rigidbody2D component
+        _rb = GetComponent<Rigidbody2D>();
+        if (_rb == null)
+        {
+            _rb = gameObject.AddComponent<Rigidbody2D>();
+        }
     }
 
     // Update is called once per frame
@@ -74,20 +91,25 @@ public class Enemy : MonoBehaviour
 
     }
 
-    //display found target once:
-    private bool foundTarget = false;
+   
     private void HandleNormalBehavior()
     {
         //if no target set just exit the method 
         if (_playerTarget == null) return;
-        
+
+        float distanceToPlayer = Vector2.Distance(transform.position, _playerTarget.position);
+
         // Check if player is within range
-        if (Vector2.Distance(transform.position, _playerTarget.position) <= _targetRange)
+        if (distanceToPlayer <= _targetRange)
         {
-            if (!foundTarget)
+            // Move towards the player if not too close
+            if (distanceToPlayer > _safeDistance)
             {
-                foundTarget = true;
-                Debug.Log("Found Target!");
+                MoveTowardPlayer();
+            }
+            else
+            {
+                StopMoving();
             }
 
             //update timer
@@ -100,7 +122,12 @@ public class Enemy : MonoBehaviour
                 _shootTimer = 0f; // Reset shoot timer
             }//end inner if 
 
-        }//end outer if 
+        }
+        else
+        {
+            // Wander if the player is out of range
+            Wander();
+        }//end outer else if 
     }//edn HandleNormalBehavior
 
     private void HandleTrappedState()
@@ -118,6 +145,34 @@ public class Enemy : MonoBehaviour
         }
     }//edn HandleTrappedState
 
+
+    private void MoveTowardPlayer()
+    {
+        Vector2 direction = (_playerTarget.position - transform.position).normalized;
+        _rb.linearVelocity = direction * _moveSpeed;
+    }
+
+    private void StopMoving()
+    {
+        _rb.linearVelocity = Vector2.zero;
+    }
+
+    private void Wander()
+    {
+        _wanderTimer += Time.deltaTime;
+
+        if (_wanderTimer >= _wanderCooldown)
+        {
+            // Change wander direction after cooldown
+            _wanderDirection = Random.insideUnitCircle.normalized * _wanderRadius;
+            _wanderTimer = 0f;
+        }
+
+        // Move in the current wander direction
+        Vector2 targetPosition = (Vector2)transform.position + _wanderDirection * Time.deltaTime;
+        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+        _rb.linearVelocity = direction * _moveSpeed;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -164,6 +219,9 @@ public class Enemy : MonoBehaviour
     private void HandleDeath()
     {
         // Add death animations or sounds here
+
+        //Stop Movement 
+        _rb.linearVelocity = Vector2.zero;
 
         // Destroy the enemy after a delay
         Destroy(gameObject, _destroyAfterDeathDelay);
@@ -214,7 +272,7 @@ public class Enemy : MonoBehaviour
         // Optionally destroy the bubble after some time to clean up the scene
         Destroy(bubble, 10f);
 
-        Debug.Log("Enemy shot a bubble!");
+        //Debug.Log("Enemy shot a bubble!");
 
     }
 

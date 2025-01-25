@@ -39,12 +39,17 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Test Re-Displaying Bubbles
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             //Spawn / Display the bubbles in the list to the user
             DisplayBubbles();
         }
 
+        //Test Taking Damage
+        if (Keyboard.current.qKey.wasPressedThisFrame) PlayerTakeDamage();
+
+        //Shoot Bubbles
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             ShootBubble();
@@ -96,9 +101,10 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     private void RemoveBubble()
     {
         //Destroy bubble
+        Destroy(_bubblesList[_bubblesList.Count - 1]);
+        bubbleHealth--;//reduce bubbles left count
 
         //Remove first or last bubble in the list and move the rest up (Think Snake Game Code for the bubble positions)
-
 
     }//edn RemoveBubble
 
@@ -120,7 +126,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         }
         else
         {
-            //GameManager.Instance.EndGame
+            //Player Dead Let the GM know 
+            GameManager.Instance.PlayerDeath();
 
         }
 
@@ -158,8 +165,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         lastBubble.transform.parent = null;
 
         // Remove the bubble from the list
-        _bubblesList.RemoveAt(_bubblesList.Count - 1);
-        bubbleHealth--;//reduce bubbles left count
+        RemoveBubble();
 
         // Ensure the bubble has a Rigidbody2D for physics
         Rigidbody2D bubbleRigidbody = lastBubble.GetComponent<Rigidbody2D>();

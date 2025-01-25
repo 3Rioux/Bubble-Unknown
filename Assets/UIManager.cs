@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -147,6 +147,9 @@ public class UIManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        //Set State to Main Menu
+        GameManager.Instance.ReturnToMainMenu();
     }
 
     // === SETTINGS HANDLING ===

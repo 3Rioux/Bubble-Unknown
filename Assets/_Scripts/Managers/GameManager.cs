@@ -84,8 +84,8 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.MAINMENU:
-                UIManager.Instance.ShowMainMenu(true);
-                Time.timeScale = 0f; // Pause the game
+                //UIManager.Instance.ShowMainMenu(true);
+                //Time.timeScale = 0f; // Pause the game
                 break;
 
             case GameState.PLAYING:

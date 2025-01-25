@@ -128,7 +128,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         else
         {
             //Player Dead Let the GM know 
-            GameManager.Instance.PlayerDeath();
+            //GameManager.Instance.PlayerDeath();
+            GameManager.Instance.GameOver();
 
         }
 

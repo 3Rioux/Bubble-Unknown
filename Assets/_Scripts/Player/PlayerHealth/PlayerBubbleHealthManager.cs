@@ -39,6 +39,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PAUSED) return; // DONT Allow player input if Game is Pause 
+
         //Test Re-Displaying Bubbles
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -52,6 +54,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         //Shoot Bubbles
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
+           
             ShootBubble();
         }
     }

@@ -209,4 +209,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+    private void OnDrawGizmos()
+    {
+        float ran = Random.value;
+        Gizmos.color = new Color(Random.value * ran, Random.value * ran, Random.value * ran);
+        Gizmos.DrawWireSphere(this.transform.position, _targetRange);
+    }
+
 }

@@ -15,11 +15,10 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -68,13 +67,17 @@ public class SoundManager : MonoBehaviour
         PlayerPrefs.SetFloat("SFXVolume", volume);
     }
 
+    // Retrieve current volume settings for UI
+    public float GetMasterVolume() => PlayerPrefs.GetFloat("MasterVolume", 0.75f);
+    public float GetMusicVolume() => PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+    public float GetSFXVolume() => PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+
     private void LoadVolumeSettings()
     {
-        SetMasterVolume(PlayerPrefs.GetFloat("MasterVolume", 0.75f));
-        SetMusicVolume(PlayerPrefs.GetFloat("MusicVolume", 0.75f));
-        SetSFXVolume(PlayerPrefs.GetFloat("SFXVolume", 0.75f));
+        SetMasterVolume(GetMasterVolume());
+        SetMusicVolume(GetMusicVolume());
+        SetSFXVolume(GetSFXVolume());
     }
-
 
     // === AUDIO FADE HELPERS ===
     private IEnumerator FadeInMusic(AudioClip newClip, float duration)

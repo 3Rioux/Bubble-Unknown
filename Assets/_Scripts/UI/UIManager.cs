@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        LoadSettings();
+        UpdateVolumeSliders();
         HandleSceneStart();
     }
 
@@ -251,26 +251,26 @@ private void Update()
     public void OnClick_SetMasterVolume(float volume)
     {
         SoundManager.Instance.SetMasterVolume(volume);
-        _masterVolumeSlider.value = volume;  // Update slider UI
+        _masterVolumeSlider.value = volume;  // Reflect UI change
     }
 
     public void OnClick_SetMusicVolume(float volume)
     {
         SoundManager.Instance.SetMusicVolume(volume);
-        _musicVolumeSlider.value = volume;  // Update slider UI
+        _musicVolumeSlider.value = volume;  // Reflect UI change
     }
 
     public void OnClick_SetSFXVolume(float volume)
     {
         SoundManager.Instance.SetSFXVolume(volume);
-        _sfxVolumeSlider.value = volume;  // Update slider UI
+        _sfxVolumeSlider.value = volume;  // Reflect UI change
     }
 
-    private void LoadSettings()
+    private void UpdateVolumeSliders()
     {
-        _masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
-        _musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        _sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        _masterVolumeSlider.value = SoundManager.Instance.GetMasterVolume();
+        _musicVolumeSlider.value = SoundManager.Instance.GetMusicVolume();
+        _sfxVolumeSlider.value = SoundManager.Instance.GetSFXVolume();
     }
 
 

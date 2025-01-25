@@ -38,12 +38,13 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
 
-        _inputActions = new InputSystem_Actions();
+        _inputActions = new InputSystem_Actions();  // Ensure this is initialized only once
     }
+
 
     private void OnEnable()
     {
@@ -55,11 +56,16 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
-        _inputActions.UI.Pause.Disable();
-        _inputActions.UI.Back.Disable();
-        _inputActions.Player.Disable();
+        if (_inputActions != null)
+        {
+            _inputActions.UI.Pause.Disable();
+            _inputActions.UI.Back.Disable();
+            _inputActions.Player.Disable();
+        }
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
 
     private void Start()
     {
@@ -67,23 +73,28 @@ public class UIManager : MonoBehaviour
         HandleSceneStart();
     }
 
-    private void Update()
+private void Update()
+{
+    // Prevent pausing in the GameOver state
+    if (GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER) return;
+
+    // Prevent pausing in the main menu
+    if (!_isMainMenu && _inputActions.UI.Pause.triggered)
     {
-        //Prevent Pausing in the GameOver State 
-        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER) return;
-
-        // Prevent pausing in the main menu
-        if (!_isMainMenu && _inputActions.UI.Pause.triggered)
-        {
-            TogglePauseMenu();
-        }
-
-        // Close settings using Escape (Back button)
-        if (_settingsPanel.activeSelf && _inputActions.UI.Back.triggered)
-        {
-            ToggleSettings();
-        }
+        TogglePauseMenu();
     }
+
+    // Close settings or credits using Escape (Back button)
+    if (_settingsPanel.activeSelf && _inputActions.UI.Back.triggered)
+    {
+        ToggleSettings();
+    }
+    else if (_creditsPanel.activeSelf && _inputActions.UI.Back.triggered)
+    {
+        ToggleCredits();
+    }
+}
+
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -214,15 +225,18 @@ public class UIManager : MonoBehaviour
         SetPanelVisibility(_mainMenuPanel, show);
     }
 
-    public void OnClick_OpenCredits()
+    public void ToggleCredits()
     {
-        SetPanelVisibility(_creditsPanel, true);
+        bool isActive = _creditsPanel.activeSelf;
+        SetPanelVisibility(_creditsPanel, !isActive);
+
+        // If credits are closed, make sure to resume pause menu properly
+        if (!isActive && _pauseMenuPanel != null && _pauseMenuPanel.activeSelf)
+        {
+            SetPanelVisibility(_pauseMenuPanel, true);
+        }
     }
 
-    public void OnClick_CloseCredits()
-    {
-        SetPanelVisibility(_creditsPanel, false);
-    }
 
     public void OnClick_StartGame()
     {
@@ -254,9 +268,9 @@ public class UIManager : MonoBehaviour
 
     private void LoadSettings()
     {
-        _masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
-        _musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        _sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+        _masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        _musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        _sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
     }
 
 

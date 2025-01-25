@@ -69,15 +69,15 @@ namespace _Scripts.Shield
         //    float angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
         //    transform.rotation = Quaternion.Euler(0, 0, angle - 30);
         //}
-        //void Update()
-        //{//working
+        void Update()
+        {//working
 
-        //    float rotationX = Input.GetAxis("Mouse X") * -rotationSpeed;
-        //    transform.RotateAround(centre.position, Vector3.forward, rotationX);
+            float rotationX = Input.GetAxis("Mouse X") * -rotationSpeed;
+            transform.RotateAround(centre.position, Vector3.forward, rotationX);
 
-        //    desiredPos = (transform.position - centre.position).normalized * radius + centre.position;
-        //    transform.position = Vector3.MoveTowards(transform.position, desiredPos, radiusSpeed * Time.deltaTime);
-        //}
+            desiredPos = (transform.position - centre.position).normalized * radius + centre.position;
+            transform.position = Vector3.MoveTowards(transform.position, desiredPos, radiusSpeed * Time.deltaTime);
+        }
 
         //rotate around pivot of this object 
         //private Camera cam;

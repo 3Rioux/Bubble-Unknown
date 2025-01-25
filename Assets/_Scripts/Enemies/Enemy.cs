@@ -10,26 +10,31 @@ public class Enemy : MonoBehaviour
 
     [Header("Target")]
     [SerializeField] private Transform _playerTarget;
-    [SerializeField] private float _targetRange = 20;
+    [SerializeField] private float _targetRange = 20f;
 
     [Header("Shoot")]
-    [SerializeField]
-    private GameObject _bubbleShootPrefab; // Store my Bubble Prefab To Shoot Prefab
-    [SerializeField]
-    private float _velocity = 10;
+    [SerializeField] private GameObject _bubbleShootPrefab; // Store my Bubble Prefab To Shoot Prefab
+    [SerializeField] private float _shootCooldown = 2f; // Delay between shots
+    [SerializeField] private float _velocity = 10;
+    private float _shootTimer = 0f; // Timer for shooting
 
 
     [Header("Trapped In Bubble")]
     [SerializeField] private bool _isTrapped = false;
     [SerializeField] private float _damageDelay = 0.5f;
-    [SerializeField] private float _timeSinceLastDamaged = 0f;
+    private float _timeSinceLastDamaged = 0f;
     private int _consecutiveAttackCount = 0; // keep track of the number of damage rounds the Unit took inside the bubble 
 
+    [Header("Default Damage")]
     [SerializeField] private int _defaultDamageAmount = 50;
 
     [Header("Living State")]
     [SerializeField] private bool _isAlive = true;
     [SerializeField] private float _destroyAfterDeathDelay = 5f;
+
+    [Header("State")]
+    [SerializeField] private ENEMYSTATES _currentState = ENEMYSTATES.DOINGHISTHING;
+
 
     //========= GET & SET =========
     public int Health { get => e_health; set => e_health = value; }
@@ -48,8 +53,56 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+        if (!_isAlive) return; // Skip updates if dead
+
+        // State handling
+        switch (_currentState)
+        {
+            case ENEMYSTATES.DOINGHISTHING:
+                HandleNormalBehavior();
+                break;
+            case ENEMYSTATES.TRAPPED:
+                HandleTrappedState();
+                break;
+            case ENEMYSTATES.DEAD:
+                break; // No behavior if dead
+        }
+
     }
+
+    private void HandleNormalBehavior()
+    {
+        // Check if player is within range
+        if (Vector2.Distance(transform.position, _playerTarget.position) <= _targetRange)
+        {
+            //update timer
+            _shootTimer += Time.deltaTime;
+
+            //shoot if possible 
+            if (_shootTimer >= _shootCooldown)
+            {
+                UnitShoot();
+                _shootTimer = 0f; // Reset shoot timer
+            }//end inner if 
+
+        }//end outer if 
+    }//edn HandleNormalBehavior
+
+    private void HandleTrappedState()
+    {
+        //Update Timer for damaged
+        _timeSinceLastDamaged += Time.deltaTime;
+
+        //Take Damage If possible -> Try to break free from the bubble 
+        if (_timeSinceLastDamaged >= _damageDelay)
+        {
+            UnitTakeDamage(_defaultDamageAmount);
+            _timeSinceLastDamaged = 0f;
+
+            if (!BreakFreeFromBubble()) return; // Try to break free if possible
+        }
+    }//edn HandleTrappedState
 
 
     private void OnCollisionEnter(Collision collision)
@@ -96,24 +149,19 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     private bool BreakFreeFromBubble()
     {
-        //increase damage round count 
         _consecutiveAttackCount++;
-        //ALWAYS^^^
-
-        //check consecutive attack amount:
-        if (_isAlive && _consecutiveAttackCount > 3)
+        if (_consecutiveAttackCount > 3)
         {
-            //breaks free
             _isTrapped = false;
+            _currentState = ENEMYSTATES.DOINGHISTHING;
+            _consecutiveAttackCount = 0;
 
-
-            //return to DOINGHISTHING state 
-
-
-
+            Debug.Log("Enemy broke free from the bubble!");
+            return true;
         }
 
-    }
+        return false;
+    }//ebd BreakFreeFromBubble
 
 
     // Enemy ATTACK logic

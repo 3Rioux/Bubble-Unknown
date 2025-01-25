@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _settingsPanel;
     [SerializeField] private GameObject _pauseMenuPanel;
     [SerializeField] private GameObject _creditsPanel;
+    //Added GameOver
+    [SerializeField] public GameObject _gameOverPanel;
 
     [Header("Audio Components")]
     [SerializeField] private AudioMixer _audioMixer;
@@ -93,6 +95,7 @@ public class UIManager : MonoBehaviour
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
             SetPanelVisibility(_creditsPanel, false);
+            SetPanelVisibility(_gameOverPanel, false);//Added
 
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
@@ -103,6 +106,7 @@ public class UIManager : MonoBehaviour
             ShowMainMenu(false);
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
+            SetPanelVisibility(_gameOverPanel, false);//Added
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             Time.timeScale = 1f;
@@ -212,7 +216,7 @@ public class UIManager : MonoBehaviour
 
 
     // === HELPER FUNCTION ===
-    private void SetPanelVisibility(GameObject panel, bool visible)
+    public void SetPanelVisibility(GameObject panel, bool visible)
     {
         if (panel == null)
         {

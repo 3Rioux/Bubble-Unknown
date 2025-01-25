@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public enum ENEMYSTATES { DOINGHISTHING, TRAPPED, ERROR};
+public enum ENEMYSTATES { DOINGHISTHING, TRAPPED, DEAD, ERROR};
 
 public class Enemy : MonoBehaviour
 {
@@ -48,11 +49,15 @@ public class Enemy : MonoBehaviour
     {
         //set health to max health at start 
         Health = MaxHealth;
+
+        //Test Time
+        StartCoroutine(InstantiateBubbleCoroutine());
     }
 
     // Update is called once per frame
     void Update()
     {
+       
 
         if (!_isAlive) return; // Skip updates if dead
 
@@ -73,6 +78,9 @@ public class Enemy : MonoBehaviour
 
     private void HandleNormalBehavior()
     {
+        //if no target set just exit the method 
+        if (_playerTarget == null) return;
+        
         // Check if player is within range
         if (Vector2.Distance(transform.position, _playerTarget.position) <= _targetRange)
         {
@@ -170,10 +178,35 @@ public class Enemy : MonoBehaviour
         //Shoot @ Player
 
         //Delay between shoots 
-
-        //
+       
+       
 
     }
 
+
+    //Test 
+    private IEnumerator InstantiateBubbleCoroutine()
+    {
+        while (true)
+        {
+            GameObject lastBubble = Instantiate(_bubbleShootPrefab, this.transform.position, Quaternion.identity);
+
+            // Ensure the bubble has a Rigidbody2D for physics
+            Rigidbody2D bubbleRigidbody = lastBubble.GetComponent<Rigidbody2D>();
+            if (bubbleRigidbody == null)
+            {
+                bubbleRigidbody = lastBubble.AddComponent<Rigidbody2D>();
+            }
+
+            // Apply velocity to the bubble
+            bubbleRigidbody.linearVelocity = new Vector2(2, 0);
+
+
+            // Optionally destroy the bubble after some time to clean up the scene
+            Destroy(lastBubble, 5f);
+
+            yield return new WaitForSeconds(2);
+        }
+    }
 
 }

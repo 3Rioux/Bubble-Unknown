@@ -6,11 +6,21 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public StateMachine<GameState> GameStateMachine;
+
     /***********************MOVE TO UI MANAGER ***********************/
-    [Header("UI Elements")]
-    [SerializeField] private GameObject endGameUI; // Assign in the Unity Inspector
-    //[SerializeField] private TextMeshProUGUI scoreText; // Assign a Text element for the score
+    //[Header("UI Elements")]
+    ////[SerializeField] private GameObject endGameUI; // Assign in the Unity Inspector
+    ////[SerializeField] private TextMeshProUGUI scoreText; // Assign a Text element for the score
+
+    //[Header("UI Elements")]
+    //[SerializeField] private GameObject mainMenuUI;
+    //[SerializeField] private GameObject pauseMenuUI;
+    //[SerializeField] private GameObject gameOverUI;
+
     /***********************MOVE TO UI MANAGER ***********************/
+
+
 
 
     [SerializeField] private int score = 0; // Example score tracker
@@ -22,8 +32,108 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else Destroy(gameObject);
+        else
+        {
+            Destroy(gameObject);
+        }
+
+
+        // Initialize the state machine with the default state
+        GameStateMachine = new StateMachine<GameState>(GameState.MAINMENU);
+        GameStateMachine.OnStateChanged += HandleStateChanged;
+
     }//end Awake
+
+    private void Start()
+    {
+        // Start in MAINMENU
+        GameStateMachine.ChangeState(GameState.MAINMENU);
+    }
+    private void Update()
+    {
+        // Handle game state transitions (example hotkeys)
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (GameStateMachine.CurrentState == GameState.PLAYING)
+            {
+                PauseGame();
+            }
+            else if (GameStateMachine.CurrentState == GameState.PAUSED)
+            {
+                ResumeGame();
+            }
+        }
+
+        //Test Back To Main Menu 
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            ReturnToMainMenu();
+        }
+    }
+
+    //===================Game States===============================
+
+    private void HandleStateChanged(GameState newState)
+    {
+        // Deactivate all UIs initially
+        //mainMenuUI?.SetActive(false);
+        //pauseMenuUI?.SetActive(false);
+        //gameOverUI?.SetActive(false);
+
+        // Handle UI and logic for each state
+        switch (newState)
+        {
+            case GameState.MAINMENU:
+                UIManager.Instance.ShowMainMenu(true);
+                Time.timeScale = 0f; // Pause the game
+                break;
+
+            case GameState.PLAYING:
+                UIManager.Instance.ShowMainMenu(false);
+                //UIManager.Instance.SetPanelVisibility(UIManager.Instance._pauseMenuPanel, false);
+                Time.timeScale = 1f; // Resume the game
+                break;
+
+            case GameState.PAUSED:
+                //UIManager.Instance.SetPanelVisibility(UIManager.Instance._pauseMenuPanel, true);
+                //UIManager.Instance.TogglePauseMenu();
+
+                //Time.timeScale = 0f; // Pause the game
+                break;
+
+            case GameState.GAMEOVER:
+                UIManager.Instance.SetPanelVisibility(UIManager.Instance._gameOverPanel, true);
+                Time.timeScale = 0f; // Stop the game
+                break;
+        }
+    }
+
+    public void StartGame()
+    {
+        GameStateMachine.ChangeState(GameState.PLAYING);
+    }
+
+    public void PauseGame()
+    {
+        GameStateMachine.ChangeState(GameState.PAUSED);
+    }
+
+    public void ResumeGame()
+    {
+        GameStateMachine.ChangeState(GameState.PLAYING);
+    }
+
+    public void ReturnToMainMenu()
+    {
+        GameStateMachine.ChangeState(GameState.MAINMENU);
+    }
+
+    public void GameOver()
+    {
+        GameStateMachine.ChangeState(GameState.GAMEOVER);
+    }
+
+    //===================Game States===============================
 
     /// <summary>
     /// Handles the player death scenario by stopping the game, showing the end game UI, and displaying the score.
@@ -36,11 +146,12 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
 
         // Display the end game UI
-        if (endGameUI != null)
-        {
-            endGameUI.SetActive(true);
-        }
+        //if (gameOverUI != null)
+        //{
+        //    gameOverUI.SetActive(true);
+        //}
 
+        GameOver();
         // Display the final score
         //if (scoreText != null)
         //{

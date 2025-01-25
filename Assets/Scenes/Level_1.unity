@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae7bf95506dca340848e2082b623893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endGameUI: {fileID: 2040218533}
   score: 0
 --- !u!4 &53034252
 Transform:
@@ -176,6 +175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 125147507}
   - component: {fileID: 125147506}
+  - component: {fileID: 125147508}
   m_Layer: 0
   m_Name: Enemy_1(Sniper)
   m_TagString: Untagged
@@ -253,6 +253,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &125147508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125147505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 088bf252267000a4d90b53c4f06d7536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  e_health: 0
+  e_maxHealth: 300
+  _playerTarget: {fileID: 0}
+  _targetRange: 20
+  _bubbleShootPrefab: {fileID: 9054518395613425000, guid: 441d66dc92d5f8848925abccc053be4a, type: 3}
+  _shootCooldown: 2
+  _velocity: 10
+  _isTrapped: 0
+  _damageDelay: 0.5
+  _defaultDamageAmount: 50
+  _isAlive: 1
+  _destroyAfterDeathDelay: 5
+  _currentState: 0
 --- !u!1 &135939238
 GameObject:
   m_ObjectHideFlags: 0

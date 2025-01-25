@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
         // Initialize references
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
-        jumpAction = playerInput.actions["Jump"];
+        //jumpAction = playerInput.actions["Jump"];
 
         if (rb == null)
         {
@@ -43,10 +43,10 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         // Handle jump input
-        if (jumpAction.triggered && isGrounded)
-        {
-            Jump();
-        }
+        //if (jumpAction.triggered && isGrounded)
+        //{
+        //    Jump();
+        //}
     }
 
     private void FixedUpdate()

@@ -21,12 +21,9 @@ namespace _Scripts.Shield
         }
 
 
-        private void Awake()
-        {
-            cam = Camera.main;
-        }
+       
 
-        [SerializeField] private GameObject orb;
+        [SerializeField] private GameObject player;
         [SerializeField] private float radius;
         [SerializeField] private float radiusSpeed;
         [SerializeField] private float rotationSpeed;
@@ -34,20 +31,53 @@ namespace _Scripts.Shield
          private Transform centre;
          private Vector3 desiredPos;
 
-         void Start()
-         {
-             centre = orb.transform;
-             transform.position = (transform.position - centre.position).normalized * radius + centre.position;
-         }
+        private void Awake()
+        {
+            cam = Camera.main;
+        }
 
-         void Update()
+        void Start()
          {
-             float rotationX = Input.GetAxis("Mouse X") * -rotationSpeed;
-             transform.RotateAround(centre.position, Vector3.forward, rotationX);
+            centre = player.transform;
+            transform.position = (transform.position - centre.position).normalized * radius + centre.position;
 
-             desiredPos = (transform.position - centre.position).normalized * radius + centre.position;
-             transform.position = Vector3.MoveTowards(transform.position, desiredPos, radiusSpeed * Time.deltaTime);
-         }
+            if (player == null)
+            {
+                Debug.LogError("Player GameObject is not assigned!");
+            }
+        }
+
+
+
+        //void Update()
+        //{
+        //    if (player == null) return;
+
+        //    // Get the mouse position in world space
+        //    Vector2 mouseWorldPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        //    // Calculate the direction from the player to the mouse
+        //    Vector2 directionToMouse = (mouseWorldPosition - (Vector2)player.transform.position).normalized;
+
+        //    // Calculate the desired position on the circle (orbit) around the player
+        //    Vector2 desiredPosition = (Vector2)player.transform.position + directionToMouse * radius;
+
+        //    // Smoothly move the shield to the desired position
+        //    transform.position = Vector2.Lerp(transform.position, desiredPosition, rotationSpeed * Time.deltaTime);
+
+        //    // Rotate the shield to always face the mouse
+        //    float angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
+        //    transform.rotation = Quaternion.Euler(0, 0, angle - 30);
+        //}
+        //void Update()
+        //{//working
+
+        //    float rotationX = Input.GetAxis("Mouse X") * -rotationSpeed;
+        //    transform.RotateAround(centre.position, Vector3.forward, rotationX);
+
+        //    desiredPos = (transform.position - centre.position).normalized * radius + centre.position;
+        //    transform.position = Vector3.MoveTowards(transform.position, desiredPos, radiusSpeed * Time.deltaTime);
+        //}
 
         //rotate around pivot of this object 
         //private Camera cam;
@@ -80,3 +110,17 @@ namespace _Scripts.Shield
 
     }//end ShieldMovement
 }//end namespace
+
+
+//void Update()
+//{
+//    Vector2 mouseWorldPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+//    Vector2 directionToMouse = (mouseWorldPosition - (Vector2)player.transform.position).normalized;
+//    float angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
+
+
+//    transform.RotateAround(centre.position, Vector3.forward, angle);
+
+//    desiredPos = (transform.position - centre.position).normalized * radius + centre.position;
+//    transform.position = Vector3.MoveTowards(transform.position, desiredPos, radiusSpeed * Time.deltaTime);
+//}

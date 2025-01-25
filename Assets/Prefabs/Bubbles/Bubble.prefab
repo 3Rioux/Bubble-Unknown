@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7686086379122958245}
   - component: {fileID: 5414083310513198859}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 2642452363512641679}
   - component: {fileID: 2521641820428791482}
   - component: {fileID: 5558526343819270587}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bubble
   m_TagString: PlayerBubble
   m_Icon: {fileID: 0}
@@ -192,7 +192,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

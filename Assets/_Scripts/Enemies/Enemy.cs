@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private bool _isTrapped = false;
     [SerializeField] private float _damageDelay = 0.5f;
     private float _timeSinceLastDamaged = 0f;
-    private int _consecutiveAttackCount = 0; // keep track of the number of damage rounds the Unit took inside the bubble 
+    [SerializeField] private int _consecutiveAttackCount = 0; // keep track of the number of damage rounds the Unit took inside the bubble 
 
     [Header("Default Damage")]
     [SerializeField] private int _defaultDamageAmount = 50;
@@ -142,6 +142,8 @@ public class Enemy : MonoBehaviour
             _timeSinceLastDamaged = 0f;
 
             if (!BreakFreeFromBubble()) return; // Try to break free if possible
+
+            Debug.LogError("Trapped");
         }
     }//edn HandleTrappedState
 
@@ -194,23 +196,45 @@ public class Enemy : MonoBehaviour
             if (playerBubble != null)
             {
                 Rigidbody2D bubbleRb = playerBubble.GetComponent<Rigidbody2D>();
-                bubbleRb.linearVelocity = Vector2.zero;
-
+                if (bubbleRb != null)
+                {
+                    bubbleRb.linearVelocity = Vector2.zero;
+                    bubbleRb.angularVelocity = 0f;
+                }
                 // Disable the colliders
                 Collider2D enemyCollider = GetComponent<Collider2D>();
 
                 if (enemyCollider != null)
                 {
-                    enemyCollider.enabled = false;
+                   enemyCollider.enabled = false;
                 }
 
-                // Reposition the enemy inside the bubble
-                Vector3 bubblePosition = playerBubble.transform.position;
-                transform.position = bubblePosition;
+                //// Reposition the enemy inside the bubble
+                //Vector3 bubblePosition = playerBubble.transform.position;
+                //transform.position = bubblePosition;
 
-                // Adjust the bubble scale to enclose the enemy
-                Vector3 enemySize = GetComponent<Renderer>().bounds.size;
-                playerBubble.transform.localScale = new Vector3(enemySize.x * 1.9f, enemySize.y * 1.9f, 1);
+                //// Adjust the bubble scale to enclose the enemy
+                //Vector3 enemySize = GetComponent<Renderer>().bounds.size;
+                //playerBubble.transform.localScale = new Vector3(enemySize.x * 1.9f, enemySize.y * 1.9f, 1);
+
+                // Center the enemy inside the bubble
+                transform.position = playerBubble.transform.position;
+
+                // Calculate the size of the bubble to enclose the enemy
+                Renderer enemyRenderer = GetComponent<Renderer>();
+                if (enemyRenderer != null)
+                {
+                    Vector3 enemySize = enemyRenderer.bounds.size;
+                    float newBubbleScale = Mathf.Max(enemySize.x, enemySize.y) * 1.9f; // Adjust to properly fit the enemy
+
+                    playerBubble.transform.localScale = new Vector3(newBubbleScale, newBubbleScale, 1);
+                }
+
+                if (bubbleRb != null)
+                {
+                    bubbleRb.linearVelocity = Vector2.zero;
+                    bubbleRb.angularVelocity = 0f;
+                }
 
                 Debug.Log("Enemy trapped in bubble, colliders disabled, and movement paused!");
             }

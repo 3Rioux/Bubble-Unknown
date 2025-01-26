@@ -104,17 +104,17 @@ public class PlayerBubble : MonoBehaviour
 
 
         //if the player Bounses the bubble back:
-        if (collision.collider.CompareTag("Enemy"))
-        {
-            Debug.Log("Enemy Hit Enemy Unit");
+        //if (collision.collider.CompareTag("Enemy"))
+        //{
+        //    Debug.Log("Enemy Hit Enemy Unit");
 
-            //Deal Damage to the Enemy 
-            //collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
+        //    //Deal Damage to the Enemy 
+        //    //collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
 
-            //Trap it in a bubble 
+        //    //Trap it in a bubble 
 
-            Destroy(gameObject);
-        }
+        //    Destroy(gameObject);
+        //}
 
 
     }

@@ -70,10 +70,10 @@ public class GameManager : MonoBehaviour
         //}
 
         //Test Back To Main Menu 
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ReturnToMainMenu();
-        }
+        //if (Input.GetKeyDown(KeyCode.M))
+        //{
+        //    ReturnToMainMenu();
+        //}
     }
 
     //===================Game States===============================
@@ -196,6 +196,7 @@ public class GameManager : MonoBehaviour
         score += points;
 
         //Add / Display score the the HUD UI -> UIManager.Instance.UpdateScore(score)
+        UIManager.Instance.UpdateScore(score);
     }
 
 }

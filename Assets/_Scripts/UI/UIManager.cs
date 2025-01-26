@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _pauseMenuPanel;
     [SerializeField] private GameObject _creditsPanel;
     [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private GameObject _gameHUD;
 
     [Header("Audio Components")]
     [SerializeField] private AudioMixer _audioMixer;
@@ -90,6 +91,7 @@ public class UIManager : MonoBehaviour
     {
         if (_isMainMenu)
         {
+            ToggleGameHUDOver();
             ShowMainMenu(true);
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
@@ -101,6 +103,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            ToggleGameHUDOver();
             ShowMainMenu(false);
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
@@ -109,6 +112,19 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 1f;
         }
     }
+
+    // === GAME HUD HANDLING ===
+    public void ToggleGameHUDOver()
+    {
+        bool isGame = GameManager.Instance.GameStateMachine.CurrentState == GameState.PLAYING;
+        SetPanelVisibility(_gameHUD, isGame);
+    }
+
+    public void UpdateScore(int score)
+    {
+
+    }
+
 
     // === GAME OVER HANDLING ===
     public void ToggleGameOver()

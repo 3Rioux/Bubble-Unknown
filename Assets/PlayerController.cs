@@ -3,21 +3,19 @@ using UnityEngine.InputSystem;
 
 namespace _Scripts.Player
 {
-    /// <summary>
-    /// Handles player movement with smooth acceleration and deceleration.
-    /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private float _moveSpeed = 5f;  // Max movement speed
-        [SerializeField] private float _acceleration = 10f;  // Smooth start speed
-        [SerializeField] private float _deceleration = 10f;  // Smooth stop
+        [Header("Movement Settings")]
+        [SerializeField] private float _maxSpeed = 5f;      // Max movement speed
+        [SerializeField] private float _acceleration = 15f; // Acceleration factor
+        [SerializeField] private float _deceleration = 20f; // Deceleration factor
 
         private Rigidbody2D _rb;
         private InputSystem_Actions _inputActions;
         private Vector2 _movementInput;
-        private Vector2 _currentVelocity;
-
+        private Vector2 _targetVelocity;
+        
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -36,17 +34,19 @@ namespace _Scripts.Player
 
         private void MovePlayer()
         {
-            // Smooth movement with acceleration & deceleration
-            if (_movementInput.magnitude > 0)
+            if (_movementInput.sqrMagnitude > 0.01f)  // Check for small inputs
             {
-                _currentVelocity = Vector2.Lerp(_currentVelocity, _movementInput * _moveSpeed, _acceleration * Time.fixedDeltaTime);
+                // Calculate desired velocity based on input
+                _targetVelocity = _movementInput.normalized * _maxSpeed;
+
+                // Smooth acceleration towards target velocity
+                _rb.linearVelocity = Vector2.Lerp(_rb.linearVelocity, _targetVelocity, _acceleration * Time.fixedDeltaTime);
             }
             else
             {
-                _currentVelocity = Vector2.Lerp(_currentVelocity, Vector2.zero, _deceleration * Time.fixedDeltaTime);
+                // Smooth deceleration to stop
+                _rb.linearVelocity = Vector2.Lerp(_rb.linearVelocity, Vector2.zero, _deceleration * Time.fixedDeltaTime);
             }
-
-            _rb.linearVelocity = _currentVelocity;
         }
 
         private void OnDisable()

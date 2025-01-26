@@ -109,7 +109,7 @@ private void Update()
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
             SetPanelVisibility(_creditsPanel, false);
-            SetPanelVisibility(_gameOverPanel, false);//Added
+            SetPanelVisibility(_gameOverPanel, false);
 
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
@@ -120,7 +120,7 @@ private void Update()
             ShowMainMenu(false);
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
-            SetPanelVisibility(_gameOverPanel, false);//Added
+            SetPanelVisibility(_gameOverPanel, false);
             //Cursor.lockState = CursorLockMode.Locked;//
             Cursor.visible = false;
             Time.timeScale = 1f;
@@ -194,6 +194,11 @@ private void Update()
         TogglePauseMenu();
         SceneManager.LoadSceneAsync("MainMenu");
 
+        if (_gameOverPanel != null && _gameOverPanel.activeSelf)
+        {
+            SetPanelVisibility(_gameOverPanel, false);
+        }
+        
         //Cursor.lockState = CursorLockMode.None;
         //Cursor.visible = true;
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -80,7 +81,6 @@ public class PlayerBubble : MonoBehaviour
         }
     }
 
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log("Bubble Collied with Object tagged: " + collision.collider.tag + _circleCol.isTrigger);
@@ -107,16 +107,6 @@ public class PlayerBubble : MonoBehaviour
         if (collision.collider.CompareTag("Enemy"))
         {
             Debug.Log("Enemy Hit Enemy Unit");
-
-
-
-            //Deal Damage to the Enemy 
-            //collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
-
-            //Trap it in a bubble 
-
-
-            Destroy(gameObject);
         }
 
 

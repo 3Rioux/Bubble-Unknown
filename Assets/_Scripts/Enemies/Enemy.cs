@@ -152,7 +152,7 @@ public class Enemy : MonoBehaviour
         _rb.linearVelocity = direction * _moveSpeed;
     }
 
-    private void StopMoving()
+    public void StopMoving()
     {
         _rb.linearVelocity = Vector2.zero;
     }
@@ -174,17 +174,50 @@ public class Enemy : MonoBehaviour
         _rb.linearVelocity = direction * _moveSpeed;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.collider.CompareTag("Bubble"))
+        Debug.Log("Enemy collided!!!!!");
+        if(collision.collider.CompareTag("PlayerBubble"))
         {
             _isTrapped = true;//Trapped in the bubble 
 
             _currentState = ENEMYSTATES.TRAPPED;
 
+            StopMoving();
+
             //Tell the Bubble to "Grow" with this enemy as the center 
 
             //Take Damage 
+
+            PlayerBubble playerBubble = collision.gameObject.GetComponent<PlayerBubble>();
+
+            if (playerBubble != null)
+            {
+                Rigidbody2D bubbleRb = playerBubble.GetComponent<Rigidbody2D>();
+                bubbleRb.linearVelocity = Vector2.zero;
+
+                // Disable the colliders
+                Collider2D enemyCollider = GetComponent<Collider2D>();
+
+                if (enemyCollider != null)
+                {
+                    enemyCollider.enabled = false;
+                }
+
+                // Reposition the enemy inside the bubble
+                Vector3 bubblePosition = playerBubble.transform.position;
+                transform.position = bubblePosition;
+
+                // Adjust the bubble scale to enclose the enemy
+                Vector3 enemySize = GetComponent<Renderer>().bounds.size;
+                playerBubble.transform.localScale = new Vector3(enemySize.x * 1.9f, enemySize.y * 1.9f, 1);
+
+                Debug.Log("Enemy trapped in bubble, colliders disabled, and movement paused!");
+            }
+            else
+            {
+                Debug.Log("Collided object is not PlayerBubble.");
+            }
 
 
 
@@ -227,6 +260,16 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject, _destroyAfterDeathDelay);
     }
 
+private IEnumerator DelayEnablingCollider(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        Collider2D enemyCollider = GetComponent<Collider2D>();
+        if (enemyCollider != null)
+        {
+            enemyCollider.enabled = true;
+        }
+    }
 
     /// <summary>
     /// Method where the enemy breaks free from the bubble after 3 damage rounds OR
@@ -241,6 +284,9 @@ public class Enemy : MonoBehaviour
             _isTrapped = false;
             _currentState = ENEMYSTATES.DOINGHISTHING;
             _consecutiveAttackCount = 0;
+
+            // Start coroutine to re-enable colliders after delay
+            StartCoroutine(DelayEnablingCollider(1.5f));
 
             Debug.Log("Enemy broke free from the bubble!");
             return true;

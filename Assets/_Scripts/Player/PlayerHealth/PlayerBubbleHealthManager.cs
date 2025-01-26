@@ -47,7 +47,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
 
         //Also need to lock the mouse so that when i click the player does NOT Shoot 
 
-        //DisplayBubbles();
+        DisplayBubbles();
 
         //Test Re-Displaying Bubbles
         //if (Keyboard.current.spaceKey.wasPressedThisFrame)

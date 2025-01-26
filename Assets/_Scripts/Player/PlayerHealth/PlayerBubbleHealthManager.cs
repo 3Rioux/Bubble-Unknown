@@ -124,6 +124,9 @@ public class PlayerBubbleHealthManager : MonoBehaviour
        
     }//edn RemoveBubble
 
+    [SerializeField] private AudioClip _damageClip;
+    [SerializeField] private AudioClip _shootClip;
+
     //Take Damage
     public void PlayerTakeDamage()
     {
@@ -133,8 +136,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
 
         if (BubbleHealth > 0)
         {
-           //Audio FX
-
+            //Audio FX
+            SoundManager.Instance.PlaySFX(_damageClip);
             //Screen Turn Red 
 
             //??? Screen Shake ???
@@ -175,6 +178,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
             Debug.Log("Cannot shoot the last life!");
             return;
         }
+
+        SoundManager.Instance.PlaySFX(_shootClip);
 
         // Get the last bubble in the list
         GameObject lastBubble = _bubblesList[_bubblesList.Count - 1];

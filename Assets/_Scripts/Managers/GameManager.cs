@@ -89,6 +89,8 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.MAINMENU:
+                // Reset score (optional)
+                score = 0;
                 //UIManager.Instance.ShowMainMenu(true);
                 //Time.timeScale = 0f; // Pause the game
                 break;
@@ -108,6 +110,8 @@ public class GameManager : MonoBehaviour
 
             case GameState.GAMEOVER:
                 UIManager.Instance.ToggleGameOver();
+                // Reset score (optional)
+                score = 0;
                 break;
         }
     }

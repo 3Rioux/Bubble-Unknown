@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private int e_health;
     [SerializeField] private int e_maxHealth = 300;
+    [SerializeField] private int _unitScore = 100;
+
 
 
     [Header("Target")]
@@ -86,6 +88,8 @@ public class Enemy : MonoBehaviour
                 HandleTrappedState();
                 break;
             case ENEMYSTATES.DEAD:
+                Debug.Log("DEAD ENEMY!!!!!!!!!!!!!!!!!!!!!!!!!!");
+               GameManager.Instance.AddScore(_unitScore);
                 break; // No behavior if dead
         }
 
@@ -143,7 +147,7 @@ public class Enemy : MonoBehaviour
 
             if (!BreakFreeFromBubble()) return; // Try to break free if possible
 
-            Debug.LogError("Trapped");
+           // Debug.LogError("Trapped");
         }
     }//edn HandleTrappedState
 
@@ -201,6 +205,9 @@ public class Enemy : MonoBehaviour
                     bubbleRb.linearVelocity = Vector2.zero;
                     bubbleRb.angularVelocity = 0f;
                 }
+
+
+
                 // Disable the colliders
                 Collider2D enemyCollider = GetComponent<Collider2D>();
 
@@ -221,7 +228,7 @@ public class Enemy : MonoBehaviour
                 transform.position = playerBubble.transform.position;
 
                 // Calculate the size of the bubble to enclose the enemy
-                Renderer enemyRenderer = GetComponent<Renderer>();
+                SpriteRenderer enemyRenderer = GetComponent<SpriteRenderer>();
                 if (enemyRenderer != null)
                 {
                     Vector3 enemySize = enemyRenderer.bounds.size;
@@ -254,10 +261,14 @@ public class Enemy : MonoBehaviour
     //Take Damage 
     public void UnitTakeDamage(int damage)
     {
+
+        Debug.Log("UNIT TAKES DAMAGE " + damage.ToString());
         //remove HP 
         Health -= damage;
 
-        if(Health  < 0)
+        Debug.Log("UNIT HP " + Health.ToString());
+
+        if (Health  <= 0)
         {
             //enemy is dead 
             _isAlive = false;
@@ -277,14 +288,18 @@ public class Enemy : MonoBehaviour
     {
         // Add death animations or sounds here
 
+        GameManager.Instance.AddScore(_unitScore);
+
         //Stop Movement 
         _rb.linearVelocity = Vector2.zero;
+
+      
 
         // Destroy the enemy after a delay
         Destroy(gameObject, _destroyAfterDeathDelay);
     }
 
-private IEnumerator DelayEnablingCollider(float delay)
+    private IEnumerator DelayEnablingCollider(float delay)
     {
         // Wait for the specified delay
         yield return new WaitForSeconds(delay);

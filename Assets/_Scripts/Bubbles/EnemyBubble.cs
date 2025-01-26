@@ -30,14 +30,14 @@ public class EnemyBubble : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (collision.collider.CompareTag("PlayerBubble"))
-        {
-            Debug.Log("Enemy Hit Player Bubble");
-            //Pop 1 of the players lives 
+        //if (collision.collider.CompareTag("PlayerBubble"))
+        //{
+        //    Debug.Log("Enemy Hit Player Bubble");
+        //    //Pop 1 of the players lives 
 
 
-            Destroy(gameObject);
-        }
+        //    Destroy(gameObject);
+        //}
 
         //if the player Bounses the bubble back:
         if (collision.collider.CompareTag("Enemy"))

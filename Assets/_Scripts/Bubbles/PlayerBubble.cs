@@ -104,17 +104,19 @@ public class PlayerBubble : MonoBehaviour
 
 
         //if the player Bounses the bubble back:
-        //if (collision.collider.CompareTag("Enemy"))
-        //{
-        //    Debug.Log("Enemy Hit Enemy Unit");
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            Debug.Log("Enemy Hit Enemy Unit");
+            int _damage = 50;
+            //Deal Damage to the Enemy 
+            collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
+            _circleCol.enabled = false;
 
-        //    //Deal Damage to the Enemy 
-        //    //collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
+            //Trap it in a bubble 
+            StartCoroutine(DelayEnablingCollider(5f)); //turn off the collider for x seconds 
 
-        //    //Trap it in a bubble 
-
-        //    Destroy(gameObject);
-        //}
+            //Destroy(gameObject);
+        }
 
 
     }
@@ -122,7 +124,16 @@ public class PlayerBubble : MonoBehaviour
     // collision.collider.gameObject.GetComponent<Enemy>()._currentState = ENEMYSTATES.TRAPPED;
 
 
-
+    private IEnumerator DelayEnablingCollider(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+       
+        if (_circleCol != null)
+        {
+            _circleCol.enabled = true;
+        }
+    }
 
 
 

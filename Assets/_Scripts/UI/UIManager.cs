@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using DG.Tweening;  // DOTween namespace
+using DG.Tweening;
+using TMPro;  // DOTween namespace
 
 public class UIManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _creditsPanel;
     [SerializeField] private GameObject _gameOverPanel;
     [SerializeField] private GameObject _gameHUD;
+    [SerializeField] private TextMeshProUGUI _gameHUDScoreText;
 
     [Header("Audio Components")]
     [SerializeField] private AudioMixer _audioMixer;
@@ -122,7 +124,10 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScore(int score)
     {
-
+        if (score > 0)
+        {
+            _gameHUDScoreText.text = $"Score: {score}pts";
+        }
     }
 
 

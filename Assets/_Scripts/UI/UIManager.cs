@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;  // DOTween namespace
 
 public class UIManager : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _settingsPanel;
     [SerializeField] private GameObject _pauseMenuPanel;
     [SerializeField] private GameObject _creditsPanel;
-    //Added GameOver
     [SerializeField] private GameObject _gameOverPanel;
 
     [Header("Audio Components")]
@@ -42,7 +42,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        _inputActions = new InputSystem_Actions();  // Ensure this is initialized only once
+        _inputActions = new InputSystem_Actions();
     }
 
 
@@ -52,6 +52,14 @@ public class UIManager : MonoBehaviour
         _inputActions.UI.Back.Enable();
         _inputActions.Player.Enable();
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        _inputActions.UI.Pause.performed += ctx => TogglePauseMenu();
+        _inputActions.UI.Back.performed += ctx =>
+        {
+            if (_settingsPanel.activeSelf) ToggleSettings();
+            else if (_creditsPanel.activeSelf) ToggleCredits();
+            else if (_gameOverPanel.activeSelf) ToggleGameOver();
+        };
     }
 
     private void OnDisable()
@@ -73,29 +81,6 @@ public class UIManager : MonoBehaviour
         HandleSceneStart();
     }
 
-private void Update()
-{
-    // Prevent pausing in the GameOver state
-    if (GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER) return;
-
-    // Prevent pausing in the main menu
-    if (!_isMainMenu && _inputActions.UI.Pause.triggered)
-    {
-        TogglePauseMenu();
-    }
-
-    // Close settings or credits using Escape (Back button)
-    if (_settingsPanel.activeSelf && _inputActions.UI.Back.triggered)
-    {
-        ToggleSettings();
-    }
-    else if (_creditsPanel.activeSelf && _inputActions.UI.Back.triggered)
-    {
-        ToggleCredits();
-    }
-}
-
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         HandleSceneStart();
@@ -110,7 +95,6 @@ private void Update()
             SetPanelVisibility(_settingsPanel, false);
             SetPanelVisibility(_creditsPanel, false);
             SetPanelVisibility(_gameOverPanel, false);
-
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -121,7 +105,6 @@ private void Update()
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
             SetPanelVisibility(_gameOverPanel, false);
-            //Cursor.lockState = CursorLockMode.Locked;//
             Cursor.visible = false;
             Time.timeScale = 1f;
         }
@@ -130,25 +113,24 @@ private void Update()
     // === GAME OVER HANDLING ===
     public void ToggleGameOver()
     {
-        bool toggle = GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER;
-        SetPanelVisibility(_gameOverPanel, toggle);
+        bool isGameOver = GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER;
+        SetPanelVisibility(_gameOverPanel, isGameOver);
 
-        if (toggle)
+        if (isGameOver)
         {
-            //reset the pause: 
             _isPaused = true;
             _inputActions.Player.Disable();
-            _inPauseSnapshot.TransitionTo(0.5f); // ****************Change to Game Over
+            _inPauseSnapshot.TransitionTo(0.5f);  // Switch to game over audio
+            Time.timeScale = 0f;
         }
         else
         {
             _inputActions.Player.Enable();
             _normalSnapshot.TransitionTo(0.5f);
+            Time.timeScale = 1f;
         }
 
-        Time.timeScale = 0f; // Stop the game
-        //Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = toggle;
+        Cursor.visible = isGameOver;
     }
 
     // === PAUSE SYSTEM ===
@@ -157,30 +139,19 @@ private void Update()
         _isPaused = !_isPaused;
         SetPanelVisibility(_pauseMenuPanel, _isPaused);
 
-        //---
-        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PLAYING)
-        {
-            GameManager.Instance.PauseGame();
-        }
-        else if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PAUSED)
-        {
-            GameManager.Instance.ResumeGame();
-        }
-        //---
-
         if (_isPaused)
         {
             _inputActions.Player.Disable();
             _inPauseSnapshot.TransitionTo(0.5f);
+            Time.timeScale = 0f;
         }
         else
         {
             _inputActions.Player.Enable();
             _normalSnapshot.TransitionTo(0.5f);
+            Time.timeScale = 1f;
         }
 
-        Time.timeScale = _isPaused ? 0 : 1;
-        //Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = _isPaused;
     }
 
@@ -194,29 +165,18 @@ private void Update()
         TogglePauseMenu();
         SceneManager.LoadSceneAsync("MainMenu");
 
-        if (_gameOverPanel != null && _gameOverPanel.activeSelf)
+        if (_gameOverPanel.activeSelf)
         {
             SetPanelVisibility(_gameOverPanel, false);
         }
-        
-        //Cursor.lockState = CursorLockMode.None;
-        //Cursor.visible = true;
 
-        //Set State to Main Menu
         GameManager.Instance.ReturnToMainMenu();
     }
 
     // === SETTINGS HANDLING ===
     public void ToggleSettings()
     {
-        bool isActive = _settingsPanel.activeSelf;
-        SetPanelVisibility(_settingsPanel, !isActive);
-        
-        // If settings are closed, make sure to resume pause menu properly
-        if (!isActive && _pauseMenuPanel != null && _pauseMenuPanel.activeSelf)
-        {
-            SetPanelVisibility(_pauseMenuPanel, true);
-        }
+        SetPanelVisibility(_settingsPanel, !_settingsPanel.activeSelf);
     }
 
     public void OnClick_Settings()
@@ -232,23 +192,12 @@ private void Update()
 
     public void ToggleCredits()
     {
-        bool isActive = _creditsPanel.activeSelf;
-        SetPanelVisibility(_creditsPanel, !isActive);
-
-        // If credits are closed, make sure to resume pause menu properly
-        if (!isActive && _pauseMenuPanel != null && _pauseMenuPanel.activeSelf)
-        {
-            SetPanelVisibility(_pauseMenuPanel, true);
-        }
+        SetPanelVisibility(_creditsPanel, !_creditsPanel.activeSelf);
     }
-
 
     public void OnClick_StartGame()
     {
-        // change state to Playing:
         GameManager.Instance.StartGame();
-
-        //Load Level
         SceneManager.LoadScene("Level_1");
     }
 
@@ -256,19 +205,19 @@ private void Update()
     public void OnClick_SetMasterVolume(float volume)
     {
         SoundManager.Instance.SetMasterVolume(volume);
-        _masterVolumeSlider.value = volume;  // Reflect UI change
+        _masterVolumeSlider.value = volume;
     }
 
     public void OnClick_SetMusicVolume(float volume)
     {
         SoundManager.Instance.SetMusicVolume(volume);
-        _musicVolumeSlider.value = volume;  // Reflect UI change
+        _musicVolumeSlider.value = volume;
     }
 
     public void OnClick_SetSFXVolume(float volume)
     {
         SoundManager.Instance.SetSFXVolume(volume);
-        _sfxVolumeSlider.value = volume;  // Reflect UI change
+        _sfxVolumeSlider.value = volume;
     }
 
     private void UpdateVolumeSliders()
@@ -278,19 +227,13 @@ private void Update()
         _sfxVolumeSlider.value = SoundManager.Instance.GetSFXVolume();
     }
 
-
-    // === HELPER FUNCTION ===
+    // === PANEL VISIBILITY WITH DOTWEEN ===
     public void SetPanelVisibility(GameObject panel, bool visible)
     {
         if (panel == null)
         {
             Debug.LogError("Panel is not assigned in UIManager!");
             return;
-        }
-
-        if (!panel.activeSelf && visible)
-        {
-            panel.SetActive(true);
         }
 
         CanvasGroup canvasGroup = panel.GetComponent<CanvasGroup>();
@@ -301,13 +244,30 @@ private void Update()
             return;
         }
 
-        canvasGroup.alpha = visible ? 1f : 0f;
-        canvasGroup.interactable = visible;
-        canvasGroup.blocksRaycasts = visible;
+        panel.SetActive(true);
+        panel.transform.DOKill();
+        canvasGroup.DOKill();
 
-        if (!visible)
+        if (visible)
         {
-            panel.SetActive(false);
+            canvasGroup.alpha = 0f;  // Ensure it starts hidden
+            canvasGroup.DOFade(1f, 0.3f).SetEase(Ease.OutQuad).SetUpdate(true);
+            panel.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+        }
+        else
+        {
+            canvasGroup.DOFade(0f, 0.2f)
+                .SetEase(Ease.InQuad)
+                .SetUpdate(true)
+                .OnComplete(() => panel.SetActive(false));
+
+            panel.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).SetUpdate(true);
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
         }
     }
+
+
 }

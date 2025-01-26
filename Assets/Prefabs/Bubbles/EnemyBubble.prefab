@@ -193,7 +193,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 0.1
+  m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: c670f339cbadef544872f6b113a30d13, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -203,7 +203,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!58 &5558526343819270587
 CircleCollider2D:
@@ -228,7 +228,7 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_ForceReceiveLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 7671
   m_ContactCaptureLayers:
     serializedVersion: 2
     m_Bits: 4294967295

@@ -114,7 +114,7 @@ public class PlayerBubble : MonoBehaviour
             //collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
 
             //Trap it in a bubble 
-
+           
 
             Destroy(gameObject);
         }
@@ -122,7 +122,7 @@ public class PlayerBubble : MonoBehaviour
 
     }
 
-
+    // collision.collider.gameObject.GetComponent<Enemy>()._currentState = ENEMYSTATES.TRAPPED;
 
 
 

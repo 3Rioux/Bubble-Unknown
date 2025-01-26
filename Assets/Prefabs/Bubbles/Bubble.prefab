@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 2521641820428791482}
   - component: {fileID: 9190482893023560239}
   - component: {fileID: 5558526343819270587}
+  - component: {fileID: 8788438824335557968}
   m_Layer: 8
   m_Name: Bubble
   m_TagString: PlayerBubble
@@ -199,7 +200,7 @@ Rigidbody2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2816
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -220,7 +221,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 2816
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -240,3 +241,15 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &8788438824335557968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9054518395613425000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6bd53488c0b24a48ab3e5cac39af08c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

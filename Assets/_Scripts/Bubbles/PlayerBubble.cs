@@ -4,6 +4,9 @@ using UnityEngine;
 public class PlayerBubble : MonoBehaviour
 {
 
+    [Header("Bubble Sprites")]
+    [SerializeField] private Sprite[] _bubbleSprites; // array to hold the sprits 
+
     [Header("Bubble Size")]
     [SerializeField] private float growthRate = 0.5f; // Rate of growth per second
     [SerializeField] private float maxSizeMultiplier = 2f; // Maximum scale multiplier
@@ -42,6 +45,10 @@ public class PlayerBubble : MonoBehaviour
 
         // Store the original scale for growth reference
         originalScale = transform.localScale;
+
+        int ran = (int)Random.Range(0f, 2f);
+        GetComponent<SpriteRenderer>().sprite = _bubbleSprites[ran]; //pick random bubble 
+
     }
 
     private void Update()

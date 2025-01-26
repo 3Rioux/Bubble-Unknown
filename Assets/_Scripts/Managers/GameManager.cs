@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-      
+
 
 
         // Initialize the state machine with the default state
@@ -94,6 +94,14 @@ public class GameManager : MonoBehaviour
         //{
         //    ReturnToMainMenu();
         //}
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            for (int i = 1; i < enemyPerLevel[_currentLevel] - 1; i++)
+            {
+                AddEnemyKilled();
+            }
+        }
     }
 
     //===================Game States===============================
@@ -142,6 +150,8 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         GameStateMachine.ChangeState(GameState.PLAYING);
+        ResetEverything();
+        UIManager.Instance.UpdateScore(score);
     }
 
     public void PauseGame()
@@ -157,11 +167,15 @@ public class GameManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         GameStateMachine.ChangeState(GameState.MAINMENU);
+        ResetEverything();
+        UIManager.Instance.UpdateScore(score);
     }
 
     public void GameOver()
     {
         GameStateMachine.ChangeState(GameState.GAMEOVER);
+        ResetEverything();
+        UIManager.Instance.UpdateScore(score);
     }
 
     //===================Game States===============================
@@ -181,7 +195,7 @@ public class GameManager : MonoBehaviour
         //{
         //    gameOverUI.SetActive(true);
         //}
-
+        ResetEverything();
         GameOver();
         // Display the final score
         //if (scoreText != null)
@@ -203,7 +217,7 @@ public class GameManager : MonoBehaviour
     {
         // Reset time scale
         Time.timeScale = 1f;
-       
+
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); //------------------------------------------Access the LoadManager.Instance.LoadLevel(SceneManager.GetActiveScene().name);
 
@@ -212,6 +226,14 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Game restarted.");
     }//end RestartGame
+
+    public void ResetEverything()
+    {
+        score = 0;
+        //CurrentLevel = 0; //reset level to 1 
+        EnemiesKilledThisLevel = 0;
+        if (_displayCurrentEnemyKilled != null) _displayCurrentEnemyKilled.text = _enemiesKilledThisLevel.ToString() + " / " + enemyPerLevel[_currentLevel].ToString();
+    }
 
 
     /// <summary>
@@ -234,10 +256,14 @@ public class GameManager : MonoBehaviour
         _displayCurrentEnemyKilled.text = _enemiesKilledThisLevel.ToString() + " / " + enemyPerLevel[_currentLevel].ToString();
 
         //EndGame Victory message:
-        if(_enemiesKilledThisLevel == enemyPerLevel[_currentLevel])
+        if (_enemiesKilledThisLevel == enemyPerLevel[_currentLevel])
         {
-            //Win Game Logic
+            Debug.LogError("Next LEvel");
+            GameStateMachine.ChangeState(GameState.GAMEOVER);
 
+            //Win Game Logic
+            UIManager.Instance.ToggleWinGameOver();
+            //Win Menu
 
         }
     }//edn AddEnemyKilled
@@ -247,7 +273,22 @@ public class GameManager : MonoBehaviour
     {
         CurrentLevel++;
 
-        SceneManager.LoadScene(CurrentLevel + 1);
+        score = 0;
+        EnemiesKilledThisLevel = 0;
+
+        if (CurrentLevel + 1 < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(CurrentLevel + 1);
+            UIManager.Instance.UpdateScore(score);
+        }
+        else
+        {
+            UIManager.Instance.UpdateScore(score);
+            UIManager.Instance.OnClick_BackToMainMenu();
+        }
+
+
+        _displayCurrentEnemyKilled.text = _enemiesKilledThisLevel.ToString() + " / " + enemyPerLevel[_currentLevel].ToString();
 
     }
 

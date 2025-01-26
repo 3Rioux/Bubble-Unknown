@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _pauseMenuPanel;
     [SerializeField] private GameObject _creditsPanel;
     [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private GameObject _gameOverWinPanel;
     [SerializeField] private GameObject _gameHUD;
     [SerializeField] private TextMeshProUGUI _gameHUDScoreText;
 
@@ -95,6 +96,7 @@ public class UIManager : MonoBehaviour
         {
             ToggleGameHUDOver();
             ShowMainMenu(true);
+            ToggleWinGameOver();
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
             SetPanelVisibility(_creditsPanel, false);
@@ -106,6 +108,7 @@ public class UIManager : MonoBehaviour
         else
         {
             ToggleGameHUDOver();
+            ToggleWinGameOver();
             ShowMainMenu(false);
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
@@ -124,7 +127,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScore(int score)
     {
-        if (score > 0)
+        if (score >= 0)
         {
             _gameHUDScoreText.text = $"Score: {score}pts";
         }
@@ -150,6 +153,14 @@ public class UIManager : MonoBehaviour
             _normalSnapshot.TransitionTo(0.5f);
             Time.timeScale = 1f;
         }
+
+        Cursor.visible = isGameOver;
+    }
+
+    public void ToggleWinGameOver()
+    {
+        bool isGameOver = GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER;
+        SetPanelVisibility(_gameOverWinPanel, isGameOver);
 
         Cursor.visible = isGameOver;
     }
@@ -199,6 +210,12 @@ public class UIManager : MonoBehaviour
         }
 
         GameManager.Instance.ReturnToMainMenu();
+    }
+
+    public void OnClick_NextLevel()
+    {
+        GameManager.Instance.GameStateMachine.ChangeState(GameState.PLAYING);
+        GameManager.Instance.LoadNextLevel();
     }
 
     // === SETTINGS HANDLING ===

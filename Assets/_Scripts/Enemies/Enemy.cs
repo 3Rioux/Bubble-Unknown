@@ -289,6 +289,7 @@ public class Enemy : MonoBehaviour
         // Add death animations or sounds here
 
         GameManager.Instance.AddScore(_unitScore);
+        GameManager.Instance.AddEnemyKilled();
 
         //Stop Movement 
         _rb.linearVelocity = Vector2.zero;

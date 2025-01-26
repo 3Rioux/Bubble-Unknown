@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public List<int> enemyPerLevel = new List<int>(5);
 
-    private int _currentLevel = 1;
+    private int _currentLevel = 0;
     private int _enemiesKilledThisLevel = 0;
 
 
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
             case GameState.MAINMENU:
                 // Reset score (optional)
                 score = 0;
-                CurrentLevel = 1; //reset level to 1 
+                CurrentLevel = 0; //reset level to 1 
                 EnemiesKilledThisLevel = 0;
                 //UIManager.Instance.ShowMainMenu(true);
                 //Time.timeScale = 0f; // Pause the game
@@ -232,6 +232,24 @@ public class GameManager : MonoBehaviour
 
         //Add / Display score the the HUD UI -> UIManager.Instance.UpdateScore(score)
         _displayCurrentEnemyKilled.text = _enemiesKilledThisLevel.ToString() + " / " + enemyPerLevel[_currentLevel].ToString();
+
+        //EndGame Victory message:
+        if(_enemiesKilledThisLevel == enemyPerLevel[_currentLevel])
+        {
+            //Win Game Logic
+
+
+        }
+    }//edn AddEnemyKilled
+
+
+    public void LoadNextLevel()
+    {
+        CurrentLevel++;
+
+        SceneManager.LoadScene(CurrentLevel + 1);
+
     }
+
 
 }

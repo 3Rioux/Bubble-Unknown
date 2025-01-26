@@ -14,6 +14,10 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     [SerializeField] 
     private GameObject _bubblePrefab; // store my Bubble Prefab that is floating arround the player 
     [SerializeField] 
+    private GameObject _bubbleShotPrefab; // store another Bubble Prefab that is on different layer
+    [SerializeField] 
+    private GameObject _player; // player object
+    [SerializeField] 
     private List<GameObject> _bubblesList = new List<GameObject>(); // store my Bubbles 
 
 
@@ -185,7 +189,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         GameObject lastBubble = _bubblesList[_bubblesList.Count - 1];
 
         // Detach the bubble from the player's transform
-        lastBubble.transform.parent = null;
+        //lastBubble.transform.parent = null;
+        lastBubble.transform.SetParent(null);
 
         // Remove the bubble from the list
         // Remove the bubble from the list
@@ -199,7 +204,16 @@ public class PlayerBubbleHealthManager : MonoBehaviour
             bubbleRigidbody = lastBubble.AddComponent<Rigidbody2D>();
         }
 
-        
+        Destroy(lastBubble);
+
+        // Instantiate and shoot the bubble
+        GameObject newBubble = Instantiate(_bubbleShotPrefab, _player.transform.position, Quaternion.identity);
+        Rigidbody2D newBubbleRb = newBubble.GetComponent<Rigidbody2D>();
+
+        if (newBubbleRb == null)
+        {
+            newBubbleRb = newBubble.AddComponent<Rigidbody2D>();
+        }
 
         // Calculate the shooting direction
         // Use the bubble's current position and rotation to determine the forward direction
@@ -214,13 +228,13 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         Vector2 shootingDirection = directionToMouse;
 
         // Apply velocity to the bubble
-        bubbleRigidbody.linearVelocity = shootingDirection * _velocity;
+        newBubbleRb.linearVelocity = shootingDirection * _velocity;
 
         // Optionally destroy the bubble after some time to clean up the scene
         //Destroy(lastBubble, 5f);
 
         //Set Sate of bubble to is shot 
-        lastBubble.GetComponent<PlayerBubble>().IsShot = true;
+        newBubble.GetComponent<PlayerBubble>().IsShot = true;
 
         // Update the displayed bubbles
         DisplayBubbles();

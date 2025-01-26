@@ -13,7 +13,7 @@ public class PlayerBubble : MonoBehaviour
 
     private bool isShot = false; // Tracks if the bubble is shot
     private Vector3 originalScale; // Stores the bubble's original scale
-    private CircleCollider2D collider2D; // Reference to the CircleCollider2D
+    private CircleCollider2D _circleCol; // Reference to the CircleCollider2D
 
 
     private Rigidbody2D rb2D;
@@ -35,10 +35,10 @@ public class PlayerBubble : MonoBehaviour
     private void Awake()
     {
         // Cache the CircleCollider2D component
-        collider2D = GetComponent<CircleCollider2D>();
+        _circleCol = GetComponent<CircleCollider2D>();
         rb2D = GetComponent<Rigidbody2D>();
 
-        if (collider2D == null)
+        if (_circleCol == null)
         {
             Debug.LogError("CircleCollider2D not found! Please add one to the bubble.");
         }
@@ -67,9 +67,9 @@ public class PlayerBubble : MonoBehaviour
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthRate * Time.deltaTime);
 
         // Adjust the collider radius to match the new scale
-        if (collider2D != null)
+        if (_circleCol != null)
         {
-            collider2D.radius = transform.localScale.x / 2f; // Assuming the collider's default radius corresponds to half the original scale
+            _circleCol.radius = transform.localScale.x / 2f; // Assuming the collider's default radius corresponds to half the original scale
         }
 
         // Stop growing when the max size is reached
@@ -83,6 +83,8 @@ public class PlayerBubble : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //Debug.Log("Bubble Collied with Object tagged: " + collision.collider.tag + _circleCol.isTrigger);
+
         if (collision.collider.CompareTag("Wall"))
         {
             //stop moving if hits a wall

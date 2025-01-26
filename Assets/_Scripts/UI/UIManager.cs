@@ -121,7 +121,7 @@ private void Update()
             SetPanelVisibility(_pauseMenuPanel, false);
             SetPanelVisibility(_settingsPanel, false);
             SetPanelVisibility(_gameOverPanel, false);//Added
-            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Locked;//
             Cursor.visible = false;
             Time.timeScale = 1f;
         }
@@ -147,7 +147,7 @@ private void Update()
         }
 
         Time.timeScale = 0f; // Stop the game
-        Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
+        //Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = toggle;
     }
 
@@ -180,7 +180,7 @@ private void Update()
         }
 
         Time.timeScale = _isPaused ? 0 : 1;
-        Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+        //Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = _isPaused;
     }
 
@@ -194,8 +194,8 @@ private void Update()
         TogglePauseMenu();
         SceneManager.LoadSceneAsync("MainMenu");
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.None;
+        //Cursor.visible = true;
 
         //Set State to Main Menu
         GameManager.Instance.ReturnToMainMenu();

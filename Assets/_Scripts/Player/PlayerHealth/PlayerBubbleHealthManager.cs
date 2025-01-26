@@ -61,7 +61,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         //}
 
         //Test Taking Damage
-        if (Keyboard.current.qKey.wasPressedThisFrame) PlayerTakeDamage();
+        //if (Keyboard.current.qKey.wasPressedThisFrame) PlayerTakeDamage();
 
         //Shoot Bubbles
         if (Mouse.current.leftButton.wasPressedThisFrame)

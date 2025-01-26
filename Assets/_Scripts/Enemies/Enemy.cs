@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour
                 break;
             case ENEMYSTATES.DEAD:
                 Debug.Log("DEAD ENEMY!!!!!!!!!!!!!!!!!!!!!!!!!!");
-               GameManager.Instance.AddScore(_unitScore);
+                //GameManager.Instance.AddScore(_unitScore);
                 break; // No behavior if dead
         }
 
@@ -268,7 +268,7 @@ public class Enemy : MonoBehaviour
 
         Debug.Log("UNIT HP " + Health.ToString());
 
-        if (Health  <= 0)
+        if (Health  <= 0 && _isAlive)
         {
             //enemy is dead 
             _isAlive = false;

@@ -7,7 +7,9 @@ public class EnemyBubble : MonoBehaviour
     CircleCollider2D _circleCol; // this enemies sphere collider 
 
     [SerializeField] private int _bounceCount = 0; 
-    [SerializeField] private int _maxBounces = 3; 
+    [SerializeField] private int _maxBounces = 3;
+
+    private GameObject _origin;
 
     private void Awake()
     {
@@ -45,14 +47,16 @@ public class EnemyBubble : MonoBehaviour
             Debug.Log("Enemy Hit Enemy Unit");
 
 
-
-            //Deal Damage to the Enemy 
-            collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
-
+            if (collision.gameObject == _origin)
+            {
+                //Deal Damage to the Enemy 
+                collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
+                Destroy(gameObject);
+            }
             //Trap it in a bubble 
 
 
-            Destroy(gameObject);
+          
         }
 
 
@@ -62,6 +66,7 @@ public class EnemyBubble : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
+            _origin = collision.gameObject;
             //Debug.Log("Exits-----------------------");
             //turn the Collider On after exits the body 
             _circleCol.isTrigger = false;

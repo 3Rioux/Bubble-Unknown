@@ -9,9 +9,16 @@ public class GameManager : MonoBehaviour
 
     public StateMachine<GameState> GameStateMachine;
 
-    public List<int> enemyPerLevel = new List<int>();
+    public List<int> enemyPerLevel = new List<int>(5);
 
     private int _currentLevel = 1;
+    private int _enemiesKilledThisLevel = 0;
+
+
+    [SerializeField] private int score = 0; // Example score tracker
+
+    public int CurrentLevel { get => _currentLevel; set => _currentLevel = value; }
+    public int EnemiesKilledThisLevel { get => _enemiesKilledThisLevel; set => _enemiesKilledThisLevel = value; }
 
     /***********************MOVE TO UI MANAGER ***********************/
     //[Header("UI Elements")]
@@ -28,9 +35,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _displayCurrentState;
 
 
-    [SerializeField] private int score = 0; // Example score tracker
-
-    public int CurrentLevel { get => _currentLevel; set => _currentLevel = value; }
 
     private void Awake()
     {
@@ -44,11 +48,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //init enemy level count
-        enemyPerLevel[0] = 5;
-        enemyPerLevel[1] = 7;
-        enemyPerLevel[2] = 10;
-        enemyPerLevel[3] = 13; //...
+      
 
 
         // Initialize the state machine with the default state
@@ -61,6 +61,12 @@ public class GameManager : MonoBehaviour
     {
         // Start in MAINMENU
         GameStateMachine.ChangeState(GameState.MAINMENU);
+
+        //init enemy level count
+        enemyPerLevel[0] = 5;
+        enemyPerLevel[1] = 7;
+        enemyPerLevel[2] = 10;
+        enemyPerLevel[3] = 13; //...
     }
     private void Update()
     {
@@ -105,12 +111,14 @@ public class GameManager : MonoBehaviour
                 // Reset score (optional)
                 score = 0;
                 CurrentLevel = 1; //reset level to 1 
+                EnemiesKilledThisLevel = 0;
                 //UIManager.Instance.ShowMainMenu(true);
                 //Time.timeScale = 0f; // Pause the game
                 break;
 
             case GameState.PLAYING:
                 UIManager.Instance.ShowMainMenu(false);
+                EnemiesKilledThisLevel = 0;
                 //UIManager.Instance.SetPanelVisibility(UIManager.Instance._pauseMenuPanel, false);
                 Time.timeScale = 1f; // Resume the game
                 break;

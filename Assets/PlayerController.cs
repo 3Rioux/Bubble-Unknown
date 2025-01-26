@@ -15,9 +15,12 @@ namespace _Scripts.Player
         private InputSystem_Actions _inputActions;
         private Vector2 _movementInput;
         private Vector2 _targetVelocity;
-        
+
+        [SerializeField] private Animator _animator;
+
         private void Awake()
         {
+            if(_animator ==null) _animator = GetComponentInChildren<Animator>();
             _rb = GetComponent<Rigidbody2D>();
 
             _inputActions = new InputSystem_Actions();
@@ -47,6 +50,10 @@ namespace _Scripts.Player
                 // Smooth deceleration to stop
                 _rb.linearVelocity = Vector2.Lerp(_rb.linearVelocity, Vector2.zero, _deceleration * Time.fixedDeltaTime);
             }
+            // Calculate the magnitude of the velocity
+            float movementSpeed = _rb.linearVelocity.magnitude;
+            _animator.SetFloat("speed", movementSpeed);
+
         }
 
         private void OnDisable()

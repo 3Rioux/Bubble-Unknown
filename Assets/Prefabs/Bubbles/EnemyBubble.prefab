@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7686086379122958245}
   - component: {fileID: 5414083310513198859}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100,9 +100,9 @@ GameObject:
   - component: {fileID: 2032823946577146134}
   - component: {fileID: 5558526343819270587}
   - component: {fileID: 857036054171311070}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EnemyBubble
-  m_TagString: Untagged
+  m_TagString: EnemyBubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -254,3 +254,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damage: 150
+  _bounceCount: 0
+  _maxBounces: 3

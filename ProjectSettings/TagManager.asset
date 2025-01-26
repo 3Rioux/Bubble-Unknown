@@ -18,8 +18,8 @@ TagManager:
   - Wall
   - PlayerBubble
   - PlayerShield
-  - 
-  - 
+  - EnemyBubble
+  - Player
   - 
   - 
   - 

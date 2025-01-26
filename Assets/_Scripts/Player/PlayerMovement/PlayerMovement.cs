@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         // Ground check
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // Handle jump input
+        // Handle jump input ---> Dash
         //if (jumpAction.triggered && isGrounded)
         //{
         //    Jump();

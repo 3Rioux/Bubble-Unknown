@@ -23,7 +23,7 @@ public class PlayerBubble : MonoBehaviour
 
 
             //Deal Damage to the Enemy 
-            collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
+            //collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
 
             //Trap it in a bubble 
 

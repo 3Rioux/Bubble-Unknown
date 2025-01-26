@@ -25,7 +25,7 @@ public class EnemyBubble : MonoBehaviour
         {
             Debug.Log("Enemy Hit Player");
             //Pop 1 of the players lives 
-
+            collision.gameObject.GetComponentInChildren<PlayerBubbleHealthManager>().PlayerTakeDamage();
 
             Destroy(gameObject);
         }

@@ -45,7 +45,7 @@ public class SoundManager : MonoBehaviour
     // === SFX CONTROL ===
     public void PlaySFX(AudioClip clip)
     {
-        _sfxSource.PlayOneShot(clip);
+        _sfxSource.PlayOneShot(clip, GetSFXVolume());
     }
 
     // === VOLUME CONTROL ===

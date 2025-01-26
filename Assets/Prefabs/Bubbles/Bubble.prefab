@@ -175,7 +175,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!50 &6390148649519652138
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bubbleSprites:
-  - {fileID: -1935083779452269832, guid: 88bf58f696026064b8c83824514536c0, type: 3}
-  - {fileID: -3448220263590106980, guid: d9e2ff348549fb64bb9525a571b18976, type: 3}
+  - {fileID: 21300000, guid: 88bf58f696026064b8c83824514536c0, type: 3}
+  - {fileID: 21300000, guid: d9e2ff348549fb64bb9525a571b18976, type: 3}
   growthRate: 0.5
   maxSizeMultiplier: 4

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public StateMachine<GameState> GameStateMachine;
+
+    public List<int> enemyPerLevel = new List<int>();
+
+    private int _currentLevel = 1;
 
     /***********************MOVE TO UI MANAGER ***********************/
     //[Header("UI Elements")]
@@ -25,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int score = 0; // Example score tracker
 
+    public int CurrentLevel { get => _currentLevel; set => _currentLevel = value; }
+
     private void Awake()
     {
         if (Instance == null)
@@ -36,6 +43,12 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        //init enemy level count
+        enemyPerLevel[0] = 5;
+        enemyPerLevel[1] = 7;
+        enemyPerLevel[2] = 10;
+        enemyPerLevel[3] = 13; //...
 
 
         // Initialize the state machine with the default state
@@ -91,6 +104,7 @@ public class GameManager : MonoBehaviour
             case GameState.MAINMENU:
                 // Reset score (optional)
                 score = 0;
+                CurrentLevel = 1; //reset level to 1 
                 //UIManager.Instance.ShowMainMenu(true);
                 //Time.timeScale = 0f; // Pause the game
                 break;

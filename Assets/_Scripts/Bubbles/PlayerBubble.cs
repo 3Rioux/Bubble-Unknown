@@ -107,12 +107,22 @@ public class PlayerBubble : MonoBehaviour
         if (collision.collider.CompareTag("Enemy"))
         {
             Debug.Log("Enemy Hit Enemy Unit");
+
+
+
+            //Deal Damage to the Enemy 
+            //collision.gameObject.GetComponent<Enemy>().UnitTakeDamage(_damage);
+
+            //Trap it in a bubble 
+           
+
+            Destroy(gameObject);
         }
 
 
     }
 
-
+    // collision.collider.gameObject.GetComponent<Enemy>()._currentState = ENEMYSTATES.TRAPPED;
 
 
 

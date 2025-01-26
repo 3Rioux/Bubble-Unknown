@@ -157,6 +157,12 @@ public class UIManager : MonoBehaviour
     // === PAUSE SYSTEM ===
     private void TogglePauseMenu()
     {
+        if (_isMainMenu)
+        {
+            Debug.Log("Pause is disabled in the Main Menu.");
+            return;  // Prevent pausing in the main menu
+        }
+
         _isPaused = !_isPaused;
         SetPanelVisibility(_pauseMenuPanel, _isPaused);
 
@@ -176,6 +182,7 @@ public class UIManager : MonoBehaviour
         Cursor.visible = _isPaused;
     }
 
+
     public void OnClick_Resume()
     {
         TogglePauseMenu();
@@ -184,7 +191,7 @@ public class UIManager : MonoBehaviour
     public void OnClick_BackToMainMenu()
     {
         TogglePauseMenu();
-        SceneManager.LoadSceneAsync("MainMenu");
+        ScreenTransitionManager.Instance.TransitionToScene("MainMenu");
 
         if (_gameOverPanel.activeSelf)
         {
@@ -219,7 +226,7 @@ public class UIManager : MonoBehaviour
     public void OnClick_StartGame()
     {
         GameManager.Instance.StartGame();
-        SceneManager.LoadScene("Level_1");
+        ScreenTransitionManager.Instance.TransitionToScene("Level_1");
     }
 
     // === AUDIO SETTINGS ===

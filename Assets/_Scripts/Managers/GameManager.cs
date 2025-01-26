@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _displayCurrentEnemyKilled;
 
 
+    [SerializeField] public AudioClip _MainMenuMusic;
+    [SerializeField] public AudioClip _LevelMusic;
+
 
     private void Awake()
     {
@@ -49,8 +52,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-
-
+        SoundManager.Instance.PlayMusic(_MainMenuMusic);
+        
 
         // Initialize the state machine with the default state
         GameStateMachine = new StateMachine<GameState>(GameState.MAINMENU);
@@ -75,6 +78,7 @@ public class GameManager : MonoBehaviour
 
         //Prevent Pausing in the GameOver State 
         if (GameManager.Instance.GameStateMachine.CurrentState == GameState.GAMEOVER) return;
+        if (GameManager.Instance.GameStateMachine.CurrentState == GameState.PLAYING) SoundManager.Instance.PlayMusic(_LevelMusic);
 
         // Handle game state transitions (example hotkeys)
         //if (Input.GetKeyDown(KeyCode.Escape))
@@ -152,6 +156,8 @@ public class GameManager : MonoBehaviour
         GameStateMachine.ChangeState(GameState.PLAYING);
         ResetEverything();
         UIManager.Instance.UpdateScore(score);
+
+        SoundManager.Instance.PlayMusic(_LevelMusic);
     }
 
     public void PauseGame()
@@ -169,6 +175,7 @@ public class GameManager : MonoBehaviour
         GameStateMachine.ChangeState(GameState.MAINMENU);
         ResetEverything();
         UIManager.Instance.UpdateScore(score);
+        SoundManager.Instance.PlayMusic(_MainMenuMusic);
     }
 
     public void GameOver()

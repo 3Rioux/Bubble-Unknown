@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource _musicSource;
     [SerializeField] private AudioSource _sfxSource;
 
+    
     private void Awake()
     {
         if (Instance == null)
@@ -32,6 +33,7 @@ public class SoundManager : MonoBehaviour
     // === MUSIC CONTROL ===
     public void PlayMusic(AudioClip clip, float fadeDuration = 1f)
     {
+        Debug.Log("Play Music");
         if (_musicSource.clip == clip) return;  // Avoid replaying the same track
 
         StartCoroutine(FadeInMusic(clip, fadeDuration));

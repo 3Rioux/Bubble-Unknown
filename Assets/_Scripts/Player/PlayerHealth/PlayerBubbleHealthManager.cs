@@ -28,6 +28,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
    
     [SerializeField] private float radius = 5f; // Radius of the circle around the player
 
+    public int BubbleHealth { get => bubbleHealth; set => bubbleHealth = value; }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -79,10 +81,10 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         }
 
         //Display New Ammount
-        for (int i = 0; i < bubbleHealth; i++)
+        for (int i = 0; i < BubbleHealth; i++)
         {
             // Angle between each bubble in radians
-            float angle = (360f / bubbleHealth) * i * Mathf.Deg2Rad;
+            float angle = (360f / BubbleHealth) * i * Mathf.Deg2Rad;
 
             // Calculate the position offset using trigonometry
             Vector2 spawnPositionOffset = new Vector2(
@@ -109,7 +111,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     {
         //Destroy bubble
         Destroy(_bubblesList[_bubblesList.Count - 1]);
-        bubbleHealth--;//reduce bubbles left count
+        BubbleHealth--;//reduce bubbles left count
 
         //Remove first or last bubble in the list and move the rest up (Think Snake Game Code for the bubble positions)
 
@@ -122,7 +124,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         RemoveBubble();
         _bubblesList.RemoveAt(_bubblesList.Count - 1);
 
-        if (bubbleHealth > 0)
+        if (BubbleHealth > 0)
         {
            //Audio FX
 
@@ -176,7 +178,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         // Remove the bubble from the list
         // Remove the bubble from the list
         _bubblesList.RemoveAt(_bubblesList.Count - 1);
-        bubbleHealth--;//reduce bubbles left count
+        BubbleHealth--;//reduce bubbles left count
 
         // Ensure the bubble has a Rigidbody2D for physics
         Rigidbody2D bubbleRigidbody = lastBubble.GetComponent<Rigidbody2D>();
@@ -195,7 +197,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         Vector2 directionToMouse = (mousePosition - transform.position).normalized;
 
         // Calculate the opposite direction
-        Vector2 shootingDirection = -directionToMouse;
+        Vector2 shootingDirection = directionToMouse;
 
         // Apply velocity to the bubble
         bubbleRigidbody.linearVelocity = shootingDirection * _velocity;

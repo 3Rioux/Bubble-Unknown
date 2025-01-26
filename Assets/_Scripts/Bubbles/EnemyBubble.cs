@@ -6,6 +6,9 @@ public class EnemyBubble : MonoBehaviour
 
     CircleCollider2D _circleCol; // this enemies sphere collider 
 
+    [SerializeField] private int _bounceCount = 0; 
+    [SerializeField] private int _maxBounces = 3; 
+
     private void Awake()
     {
         _circleCol = GetComponent<CircleCollider2D>();
@@ -15,14 +18,16 @@ public class EnemyBubble : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-       
+        _bounceCount++;
+        if (_bounceCount == _maxBounces) Destroy(gameObject);
+
         if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Enemy Hit Player");
             //Pop 1 of the players lives 
 
-            
 
+            Destroy(gameObject);
         }
 
         if (collision.collider.CompareTag("PlayerBubble"))

@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2642452363512641679}
@@ -167,7 +167,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: -1935083779452269832, guid: 88bf58f696026064b8c83824514536c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -253,5 +253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6bd53488c0b24a48ab3e5cac39af08c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bubbleSprites:
+  - {fileID: -1935083779452269832, guid: 88bf58f696026064b8c83824514536c0, type: 3}
+  - {fileID: -3448220263590106980, guid: d9e2ff348549fb64bb9525a571b18976, type: 3}
   growthRate: 0.5
   maxSizeMultiplier: 4

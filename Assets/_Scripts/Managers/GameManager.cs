@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     /***********************MOVE TO UI MANAGER ***********************/
 
     [SerializeField] private TextMeshProUGUI _displayCurrentState;
+    [SerializeField] private TextMeshProUGUI _displayCurrentEnemyKilled;
 
 
 
@@ -223,6 +224,14 @@ public class GameManager : MonoBehaviour
 
         //Add / Display score the the HUD UI -> UIManager.Instance.UpdateScore(score)
         UIManager.Instance.UpdateScore(score);
+    }
+
+    public void AddEnemyKilled()
+    {
+        _enemiesKilledThisLevel++;
+
+        //Add / Display score the the HUD UI -> UIManager.Instance.UpdateScore(score)
+        _displayCurrentEnemyKilled.text = _enemiesKilledThisLevel.ToString() + " / " + enemyPerLevel[_currentLevel].ToString();
     }
 
 }

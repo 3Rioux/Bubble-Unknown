@@ -97,11 +97,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2642452363512641679}
   - component: {fileID: 2521641820428791482}
-  - component: {fileID: 6390148649519652138}
+  - component: {fileID: 9190482893023560239}
   - component: {fileID: 5558526343819270587}
   - component: {fileID: 8788438824335557968}
   m_Layer: 8
-  m_Name: Bubble
+  m_Name: BubbleShoot
   m_TagString: PlayerBubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,7 +178,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &6390148649519652138
+--- !u!50 &9190482893023560239
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -193,14 +193,14 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2560
+    m_Bits: 2816
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -253,5 +253,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6bd53488c0b24a48ab3e5cac39af08c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  growthRate: 0.5
-  maxSizeMultiplier: 4

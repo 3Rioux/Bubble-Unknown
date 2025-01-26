@@ -1,5 +1,7 @@
 
 using System.Collections.Generic;
+using Unity.Android.Gradle;
+
 //using Unity.Android.Gradle;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,6 +18,9 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     private GameObject _bubblePrefab; // store my Bubble Prefab that is floating arround the player 
     [SerializeField] 
     private List<GameObject> _bubblesList = new List<GameObject>(); // store my Bubbles 
+
+
+    [SerializeField] private float attractionSpeed = 5f;
 
     [Header("Shoot")]
     [SerializeField] 
@@ -45,7 +50,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
 
         //Also need to lock the mouse so that when i click the player does NOT Shoot 
 
-        DisplayBubbles();
+        //DisplayBubbles();
 
         //Test Re-Displaying Bubbles
         //if (Keyboard.current.spaceKey.wasPressedThisFrame)
@@ -63,6 +68,11 @@ public class PlayerBubbleHealthManager : MonoBehaviour
            
             ShootBubble();
         }
+    }
+
+    private void FixedUpdate()
+    {
+        //AttractBubbleToCenter();
     }
 
     //Display / Spawn Bubble 
@@ -114,7 +124,7 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         BubbleHealth--;//reduce bubbles left count
 
         //Remove first or last bubble in the list and move the rest up (Think Snake Game Code for the bubble positions)
-
+       
     }//edn RemoveBubble
 
     //Take Damage
@@ -187,6 +197,8 @@ public class PlayerBubbleHealthManager : MonoBehaviour
             bubbleRigidbody = lastBubble.AddComponent<Rigidbody2D>();
         }
 
+        
+
         // Calculate the shooting direction
         // Use the bubble's current position and rotation to determine the forward direction
         //Vector2 shootingDirection = (lastBubble.transform.position - this.transform.position).normalized;
@@ -203,7 +215,10 @@ public class PlayerBubbleHealthManager : MonoBehaviour
         bubbleRigidbody.linearVelocity = shootingDirection * _velocity;
 
         // Optionally destroy the bubble after some time to clean up the scene
-        Destroy(lastBubble, 5f);
+        //Destroy(lastBubble, 5f);
+
+        //Set Sate of bubble to is shot 
+        lastBubble.GetComponent<PlayerBubble>().IsShot = true;
 
         // Update the displayed bubbles
         DisplayBubbles();
@@ -211,5 +226,57 @@ public class PlayerBubbleHealthManager : MonoBehaviour
     }//end ShootBubble
 
 
+    private void AttractBubbleToCenter( )
+    {
+        Vector2 centerPoint = (Vector2)transform.position;
+
+        
+        foreach (GameObject bubble in _bubblesList)
+        {
+                if (bubble == null) return;
+
+            float distanceToCenter = Vector2.Distance(bubble.transform.position, centerPoint);
+            if (distanceToCenter <= .25f) // Example range
+            {
+                // Calculate the direction from the bubble to the center
+                Vector2 directionToCenter = (centerPoint - (Vector2)bubble.transform.position).normalized;
+
+                // Move the bubble toward the center
+                bubble.transform.position = Vector2.MoveTowards(
+                    bubble.transform.position,
+                    centerPoint,
+                    attractionSpeed * Time.deltaTime
+                );
+            }
+        }
+        
+    }//edn AttractBubbleToCenter
+
+
+    //[Header("Gravity Settings")]
+    //[SerializeField] public float GRAVITY_PULL = 0.78f; // Strength of the gravity pull
+    //[SerializeField] public float m_GravityRadius = 1f; // Radius of the gravity effect
+
+    //private void OnTriggerStay2D(Collider2D other)
+    //{
+    //    // Check if the object is tagged as "PlayerBubble"
+    //    if (other.CompareTag("PlayerBubble"))
+    //    {
+    //        // Calculate the intensity of the gravity based on the distance
+    //        float gravityIntensity = Vector2.Distance(transform.position, other.transform.position) / m_GravityRadius;
+
+    //        // Ensure the object has a Rigidbody2D
+    //        Rigidbody2D rb = other.attachedRigidbody;
+    //        if (rb != null)
+    //        {
+    //            // Apply the gravity force
+    //            Vector2 forceDirection = (transform.position - other.transform.position).normalized;
+    //            rb.AddForce(forceDirection * gravityIntensity * rb.mass * GRAVITY_PULL * Time.smoothDeltaTime);
+
+    //            // Visualize the force with a debug ray
+    //            Debug.DrawRay(other.transform.position, forceDirection, Color.green);
+    //        }
+    //    }
+    //}
 
 }//end PlayerBubbleHealthManager
